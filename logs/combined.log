@@ -1,3 +1,5 @@
 2023-11-22 17:32:26: info: Server started on port: 3002
 2023-11-22 17:32:39: info: Server started on port: 3002
 2023-11-22 17:33:15: error: Error in starting server Configuration property "clientUrl" is not defined
+2023-11-22 20:41:26: error: Error in starting server Configuration property "clientUrl" is not defined
+2023-11-22 20:41:48: info: Server started on port: 3002
