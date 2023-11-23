@@ -5,6 +5,7 @@ import path from 'path';
 import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import errorMiddleware from './middlewares/error.middleware';
 import api from './routes';
 import logger from './utils/logger';
@@ -20,6 +21,7 @@ async function start(): Promise<void> {
     app.use('/uploads', express.static(path.resolve('images')));
 
     app.use(express.json());
+    app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
 
     app.use(helmet());
@@ -29,7 +31,7 @@ async function start(): Promise<void> {
       cors({
         credentials: true,
         origin: config.get<string>('clientUrl'),
-      })
+      }),
     );
 
     app.use('/api/v1', api);

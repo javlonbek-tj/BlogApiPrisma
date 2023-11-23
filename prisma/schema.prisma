@@ -12,7 +12,7 @@ model User {
   firstname            String
   lastname             String
   profilPhoto          String?
-  email                String
+  email                String        @unique
   password             String
   isBlocked            Boolean       @default(false)
   role                 RoleEnumType  @default(USER)
@@ -23,19 +23,19 @@ model User {
   comments             Comment[]
   userAward            AwardEnumType @default(BRONZE)
   isActivated          Boolean       @default(false)
-  activationLink       String?
+  activationLink       String
   passwordChangedAt    DateTime?
   passwordResetToken   String?
   passwordResetExpires DateTime?
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   token                Token?
-  postViewer           Post          @relation("PostViews", fields: [postViewerId], references: [id])
-  postViewerId         String
-  postLike             Post          @relation("PostLikes", fields: [postLikeId], references: [id])
-  postLikeId           String
-  postDislike          Post          @relation("PostDislikes", fields: [postDislikeId], references: [id])
-  postDislikeId        String
+  postViewer           Post?         @relation("PostViews", fields: [postViewerId], references: [id])
+  postViewerId         String?
+  postLike             Post?         @relation("PostLikes", fields: [postLikeId], references: [id])
+  postLikeId           String?
+  postDislike          Post?         @relation("PostDislikes", fields: [postDislikeId], references: [id])
+  postDislikeId        String?
   viewer               User?         @relation("ViewerToUser", fields: [viewerId], references: [id])
   viewerId             String?
   follower             User?         @relation("UserFollowers", fields: [followerId], references: [id])

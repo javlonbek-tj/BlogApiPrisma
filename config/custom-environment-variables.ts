@@ -5,4 +5,7 @@ export default {
   refreshTokenKey: 'JWT_REFRESH_SECRET',
   accessTokenExpiresIn: 'ACCESS_TOKEN_EXPIRES_IN',
   refreshTokenExpiresIn: 'REFRESH_TOKEN_EXPIRES_IN',
+  nodemailerUser: 'NODEMAILER_USER',
+  nodemailerPass: 'NODEMAILER_PASS',
+  apiUrl: 'API_URL',
 };
