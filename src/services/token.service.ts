@@ -3,19 +3,14 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import db from '../utils/db';
 
-interface Payload {
-  id: string;
-  email: string;
-}
+type DecodedToken<T> = T & {
+  iat: number;
+};
 
-interface User {
+type Payload = {
   id: string;
-  firstname: string;
-  lastname: string;
   email: string;
-  role: string;
-  password?: string;
-}
+};
 
 const generateTokens = (payload: Payload) => {
   const accessToken = jwt.sign(payload, config.get<string>('accessTokenKey'), {
@@ -30,13 +25,13 @@ const generateTokens = (payload: Payload) => {
   };
 };
 
-const validateAccessToken = (token: string) => {
-  const userData = jwt.verify(token, config.get<string>('accessTokenKey'));
+const validateAccessToken = (token: string): DecodedToken<Payload> => {
+  const userData = jwt.verify(token, config.get<string>('accessTokenKey')) as DecodedToken<Payload>;
   return userData;
 };
 
-const validateRefreshToken = (token: string) => {
-  const userData = jwt.verify(token, config.get<string>('refreshTokenKey'));
+const validateRefreshToken = (token: string): DecodedToken<Payload> => {
+  const userData = jwt.verify(token, config.get<string>('refreshTokenKey')) as DecodedToken<Payload>;
   return userData;
 };
 
@@ -74,12 +69,4 @@ const removeToken = async (refreshToken: string) => {
   return tokenData;
 };
 
-const createAndSaveTokens = async (userData: User) => {
-  const payload = { id: userData.id, email: userData.email };
-  const tokens = generateTokens(payload);
-  await saveToken(userData.id, tokens.refreshToken);
-  const { password, ...user } = userData;
-  return { ...tokens, user };
-};
-
-export { generateTokens, validateAccessToken, validateRefreshToken, saveToken, findToken, removeToken, createAndSaveTokens };
+export { generateTokens, validateAccessToken, validateRefreshToken, saveToken, findToken, removeToken };

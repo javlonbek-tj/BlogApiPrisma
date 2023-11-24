@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import 'dotenv/config';
 import config from 'config';
-import * as userService from '../services/auth.service';
+import * as authService from '../services/auth.service';
 
 const cookieOptions = () => {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -21,7 +21,7 @@ const cookieOptions = () => {
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userData = await userService.signup(req.body);
+    const userData = await authService.signup(req.body);
     res.cookie('jwt', userData.refreshToken, cookieOptions());
     return res.status(201).json({
       status: 'success',
@@ -34,7 +34,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 export const activateUser = (req: Request, res: Response, next: NextFunction) => {
   try {
-    userService.activate(req.params.activationLink);
+    authService.activate(req.params.activationLink);
     return res.redirect(config.get<string>('clientUrl'));
   } catch (e) {
     next(e);
@@ -43,7 +43,7 @@ export const activateUser = (req: Request, res: Response, next: NextFunction) =>
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userData = await userService.signin(req.body);
+    const userData = await authService.signin(req.body);
     res.cookie('jwt', userData.refreshToken, cookieOptions());
     return res.status(201).json({
       status: 'success',
@@ -57,7 +57,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { jwt } = req.cookies;
-    await userService.signout(jwt);
+    await authService.signout(jwt);
     res.clearCookie('jwt');
     return res.status(200).json({
       status: 'success',

@@ -1,9 +1,15 @@
 import { z } from 'zod';
 
-enum RoleEnumType {
+export enum RoleEnumType {
   USER = 'USER',
   ADMIN = 'ADMIN',
   EDITOR = 'EDITOR',
+}
+
+export enum AwardEnumType {
+  BRONZE = 'BRONZE',
+  SILVER = 'SILVER',
+  GOLD = 'GOLD',
 }
 
 export const createUserSchema = z.object({

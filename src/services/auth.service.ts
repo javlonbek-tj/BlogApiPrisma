@@ -7,6 +7,7 @@ import ApiError from '../utils/appError';
 import db from '../utils/db';
 import { sendMail } from './mail.service';
 import * as tokenService from './token.service';
+import { getUserSelectFields } from '../utils/getUserSelectedField';
 
 const signup = async ({ firstname, lastname, email, password, role }: CreateUserInput) => {
   const isUserExists = await db.user.findUnique({
@@ -26,13 +27,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
       password: hashedPassword,
       role,
     },
-    select: {
-      id: true,
-      firstname: true,
-      lastname: true,
-      email: true,
-      role: true,
-    },
+    select: getUserSelectFields(),
   });
   /* try {
     const subject = 'Your activation Link';
@@ -46,7 +41,9 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
     await db.user.delete({ where: { email } });
     throw new ApiError(500, 'There was an error sending the email. Try again later!');
   } */
-  return tokenService.createAndSaveTokens(user);
+  const tokens = tokenService.generateTokens({ id: user.id, email: user.email });
+  await tokenService.saveToken(user.id, tokens.refreshToken);
+  return { ...tokens, user };
 };
 
 const activate = async (activationLink: string) => {
@@ -62,26 +59,22 @@ const activate = async (activationLink: string) => {
   });
 };
 
-const signin = async ({ email, password }: LoginUserInput) => {
-  const user = await db.user.findUnique({
-    where: { email },
-    select: {
-      id: true,
-      firstname: true,
-      lastname: true,
-      email: true,
-      role: true,
-      password: true,
-    },
+const signin = async (input: LoginUserInput) => {
+  const existingUser = await db.user.findUnique({
+    where: { email: input.email },
+    select: getUserSelectFields(true),
   });
-  if (!user) {
+  if (!existingUser) {
     throw ApiError.BadRequest('Email or password incorrect');
   }
-  const isPassCorrect = await bcrypt.compare(password, user.password);
+  const isPassCorrect = await bcrypt.compare(input.password, existingUser.password);
   if (!isPassCorrect) {
     throw ApiError.BadRequest('Email or password incorrect');
   }
-  return tokenService.createAndSaveTokens(user);
+  const tokens = tokenService.generateTokens({ id: existingUser.id, email: existingUser.email });
+  await tokenService.saveToken(existingUser.id, tokens.refreshToken);
+  const { password, ...user } = existingUser;
+  return { ...tokens, user };
 };
 
 const signout = (refreshToken: string) => {

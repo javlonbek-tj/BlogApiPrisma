@@ -10,6 +10,7 @@ import errorMiddleware from './middlewares/error.middleware';
 import api from './routes';
 import logger from './utils/logger';
 import validateEnv from './utils/validateEnv';
+import { isAuth } from './middlewares/isAuth.middleware';
 
 const port: number = config.get<number>('port');
 
