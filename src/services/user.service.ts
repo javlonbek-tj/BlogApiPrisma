@@ -49,7 +49,7 @@ const followUser = async (followedUserId: string, followingUserId: string) => {
   if (userToBeFollowed && followingUser) {
     const isUserAlreadyFollowed = followingUser.followings.find(following => following.id === followedUserId);
     if (isUserAlreadyFollowed) {
-      throw new ApiError(400, 'You have already followed this user');
+      throw ApiError.BadRequest('You have already followed this user');
     }
     await db.user.update({
       where: { id: followedUserId },
@@ -73,4 +73,96 @@ const followUser = async (followedUserId: string, followingUserId: string) => {
   throw ApiError.BadRequest('User not found');
 };
 
-export { visitUserProfile, changedPasswordAfter, followUser };
+const unFollowUser = async (unFollowedUserId: string, unFollowingUserId: string) => {
+  const userToBeUnFollowed = await db.user.findUnique({ where: { id: unFollowedUserId }, select: getUserSelectFields() });
+  const unFollowingUser = await db.user.findUnique({ where: { id: unFollowingUserId }, select: getUserSelectFields() });
+  if (userToBeUnFollowed && unFollowingUser) {
+    const isUserAlreadyUnFollowed = unFollowingUser.followings.find(unFollowing => unFollowing.id === unFollowedUserId);
+    if (!isUserAlreadyUnFollowed) {
+      throw ApiError.BadRequest('You have not followed this user');
+    }
+    await db.user.update({
+      where: { id: unFollowedUserId },
+      data: {
+        followers: {
+          set: userToBeUnFollowed.followers.filter(follower => follower.id !== unFollowingUserId),
+        },
+      },
+    });
+    const updatedUnFollowingUser = await db.user.update({
+      where: { id: unFollowingUserId },
+      data: {
+        followings: {
+          set: unFollowingUser.followings.filter(following => following.id !== unFollowedUserId),
+        },
+      },
+      select: getUserSelectFields(),
+    });
+
+    return updatedUnFollowingUser;
+  }
+  throw ApiError.BadRequest('User not found');
+};
+
+const blockUser = async (blockedUserId: string, blockingUserId: string) => {
+  const userToBeBlocked = await db.user.findUnique({ where: { id: blockedUserId }, select: getUserSelectFields() });
+  const blockingUser = await db.user.findUnique({ where: { id: blockingUserId }, select: getUserSelectFields() });
+  if (userToBeBlocked && blockingUser) {
+    const isUserAlreadyBlocked = blockingUser.blockings.find(blocking => blocking.id === blockedUserId);
+    if (isUserAlreadyBlocked) {
+      throw ApiError.BadRequest('You have already blocked this user');
+    }
+    const updatedBlockingUser = await db.user.update({
+      where: { id: blockingUserId },
+      data: {
+        blockings: {
+          set: [...blockingUser.blockings.map(b => ({ id: b.id })), { id: blockedUserId }],
+        },
+      },
+      select: getUserSelectFields(),
+    });
+    return updatedBlockingUser;
+  }
+  throw ApiError.BadRequest('User not found');
+};
+
+const unBlockUser = async (unBlockedUserId: string, unBlockingUserId: string) => {
+  const userToBeUnBlocked = await db.user.findUnique({ where: { id: unBlockedUserId }, select: getUserSelectFields() });
+  const unBlockingUser = await db.user.findUnique({ where: { id: unBlockingUserId }, select: getUserSelectFields() });
+  if (userToBeUnBlocked && unBlockingUser) {
+    const isUserAlreadyUnBlocked = unBlockingUser.blockings.find(blocking => blocking.id === unBlockedUserId);
+    if (!isUserAlreadyUnBlocked) {
+      throw ApiError.BadRequest('You have not blocked this user');
+    }
+    const updatedUnBlockingUser = await db.user.update({
+      where: { id: unBlockingUserId },
+      data: {
+        blockings: {
+          set: unBlockingUser.blockings.filter(unBlocking => unBlocking.id !== unBlockedUserId),
+        },
+      },
+      select: getUserSelectFields(),
+    });
+    return updatedUnBlockingUser;
+  }
+  throw ApiError.BadRequest('User not found');
+};
+
+const adminBlockUser = async (userId: string) => {
+  const userToBeBlocked = await db.user.findUnique({ where: { id: userId } });
+  if (!userToBeBlocked) {
+    throw ApiError.BadRequest('User not found');
+  }
+  if (userToBeBlocked.isBlocked) {
+    throw ApiError.BadRequest('User already blocked');
+  }
+  return db.user.update({
+    where: { id: userId },
+    data: {
+      isBlocked: true,
+    },
+    select: getUserSelectFields(),
+  });
+};
+
+export { visitUserProfile, changedPasswordAfter, followUser, unFollowUser, blockUser, unBlockUser, adminBlockUser };

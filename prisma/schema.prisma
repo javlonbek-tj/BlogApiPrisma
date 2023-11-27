@@ -21,6 +21,7 @@ model User {
   followings           User[]        @relation("UserFollowings")
   posts                Post[]
   comments             Comment[]
+  blockings            User[]        @relation("UserBlockings")
   userAward            AwardEnumType @default(BRONZE)
   isActivated          Boolean       @default(false)
   activationLink       String
@@ -42,6 +43,8 @@ model User {
   followerId           String?
   following            User?         @relation("UserFollowings", fields: [followingId], references: [id])
   followingId          String?
+  blocking             User?         @relation("UserBlockings", fields: [blockingId], references: [id])
+  blockingId           String?
 }
 
 model Post {

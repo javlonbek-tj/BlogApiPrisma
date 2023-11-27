@@ -13,7 +13,8 @@ type UserSelect = {
   followings?: { select: { id: boolean } } | boolean;
   posts?: { select: { id: boolean } } | boolean;
   comments?: { select: { id: boolean } } | boolean;
-  password?: boolean; // Include password only when needed
+  blockings?: { select: { id: boolean } } | boolean;
+  password?: boolean;
   createdAt: boolean;
   updatedAt: boolean;
 };
@@ -33,6 +34,7 @@ export const getUserSelectFields = (includePassword = false): UserSelect => ({
   followings: { select: { id: true } },
   posts: { select: { id: true } },
   comments: { select: { id: true } },
+  blockings: { select: { id: true } },
   password: includePassword,
   createdAt: true,
   updatedAt: true,

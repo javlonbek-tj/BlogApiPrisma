@@ -3,6 +3,7 @@ import 'dotenv/config';
 import config from 'config';
 import * as authService from '../services/auth.service';
 
+
 const cookieOptions = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions: {

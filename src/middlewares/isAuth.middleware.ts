@@ -3,11 +3,12 @@ import ApiError from '../utils/appError';
 import * as tokenService from '../services/token.service';
 import db from '../utils/db';
 import { changedPasswordAfter } from '../services/user.service';
+import { RoleEnumType } from '@prisma/client';
 
 declare global {
   namespace Express {
     interface Request {
-      user: string;
+      userId: string;
     }
   }
 }
@@ -30,9 +31,21 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
     if (changedPasswordAfter(userData.iat, currentUser.passwordChangedAt)) {
       return next(new ApiError(401, 'User recently changed password. Please login again'));
     }
-    req.user = currentUser.id;
+    req.userId = currentUser.id;
     next();
   } catch (e) {
     return next(ApiError.UnauthenticatedError());
   }
 };
+
+type UserRole = keyof typeof RoleEnumType;
+
+export function restrictTo(...roles: UserRole[]) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const user = await db.user.findUnique({ where: { id: req.userId } });
+    if (user && !roles.includes(user.role as UserRole)) {
+      return next(ApiError.UnauthorizedError());
+    }
+    next();
+  };
+}
