@@ -31,7 +31,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
   });
   /* try {
     const subject = 'Your activation Link';
-    const link = `${config.get<string>('apiUrl')}/v1/users/activate/${activationLink}`;
+    const link = `${config.get<string>('apiUrl')}/users/activate/${activationLink}`;
     const html = `<div>
             <h1>For activation hit this link</h1>
             <a href="${link}">${link}</a>

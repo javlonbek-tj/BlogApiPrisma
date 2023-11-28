@@ -62,6 +62,78 @@ export const loginUserSchema = z.object({
   }),
 });
 
+export const updateUserSchema = z.object({
+  body: z.object({
+    firstname: z
+      .string({
+        invalid_type_error: 'Firstname must be a string',
+      })
+      .trim()
+      .optional(),
+    lastname: z
+      .string({
+        invalid_type_error: 'Lastname must be a string',
+      })
+      .trim()
+      .optional(),
+    email: z.string().email({ message: 'Invalid email' }).optional(),
+    profilPhoto: z.string().optional(),
+  }),
+});
+
+export const updatePasswordSchema = z.object({
+  body: z
+    .object({
+      oldPass: z.string({
+        required_error: 'old Password is required',
+      }),
+      newPass: z
+        .string({
+          required_error: 'new Password is required',
+        })
+        .min(8, { message: 'Password must be more than 8 characters' }),
+      newPassConfirm: z.string({
+        required_error: 'passwordConfirm is required',
+      }),
+    })
+    .refine(data => data.newPass === data.newPassConfirm, {
+      path: ['passwordConfirm'],
+      message: 'Passwords do not match',
+    }),
+});
+
+export const resetPasswordSchema = z.object({
+  body: z
+    .object({
+      password: z
+        .string({
+          required_error: 'new Password is required',
+        })
+        .min(8, { message: 'Password must be more than 8 characters' }),
+      passwordCofirm: z.string({
+        required_error: 'passwordConfirm is required',
+      }),
+    })
+    .refine(data => data.password === data.passwordCofirm, {
+      path: ['passwordConfirm'],
+      message: 'Passwords do not match',
+    }),
+});
+
+export const getUserSchema = z.object({
+  params: z.object({
+    userId: z.string(),
+  }),
+});
+
 export type CreateUserInput = Omit<z.infer<typeof createUserSchema>['body'], 'passwordConfirm'>;
 
 export type LoginUserInput = z.infer<typeof loginUserSchema>['body'];
+
+export type updateUserInput = z.infer<typeof updateUserSchema>['body'];
+
+export type updatePasswordInput = z.infer<typeof updatePasswordSchema>['body'];
+
+export type resetPasswordInput = z.infer<typeof resetPasswordSchema>['body'];
+
+export type GetUserInput = z.infer<typeof getUserSchema>['params'];

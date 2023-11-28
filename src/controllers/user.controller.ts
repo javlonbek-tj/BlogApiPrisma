@@ -1,12 +1,25 @@
 import { NextFunction, Request, Response } from 'express';
 import * as userService from '../services/user.service';
+import { GetUserInput } from '../schemas/user.schema';
 
 export const visitUserProfileHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userToBeViewed = await userService.visitUserProfile(req.params.id, req.userId);
     res.status(200).json({
       status: 'success',
-      user: userToBeViewed,
+      data: userToBeViewed,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const oneUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
+  try {
+    const user = await userService.findOne(req.params.userId);
+    res.status(200).json({
+      status: 'success',
+      data: user,
     });
   } catch (e) {
     next(e);
@@ -18,7 +31,7 @@ export const followerUserHandler = async (req: Request, res: Response, next: Nex
     const followingUser = await userService.followUser(req.params.id, req.userId);
     res.status(200).json({
       status: 'success',
-      user: followingUser,
+      data: followingUser,
     });
   } catch (e) {
     next(e);
@@ -30,7 +43,7 @@ export const unFollowerUserHandler = async (req: Request, res: Response, next: N
     const unFollowingUser = await userService.unFollowUser(req.params.id, req.userId);
     res.status(200).json({
       status: 'success',
-      user: unFollowingUser,
+      data: unFollowingUser,
     });
   } catch (e) {
     next(e);
@@ -42,7 +55,7 @@ export const blockUserHandler = async (req: Request, res: Response, next: NextFu
     const blockingUser = await userService.blockUser(req.params.id, req.userId);
     res.status(200).json({
       status: 'success',
-      user: blockingUser,
+      data: blockingUser,
     });
   } catch (e) {
     next(e);
@@ -54,7 +67,7 @@ export const unBlockUserHandler = async (req: Request, res: Response, next: Next
     const unBlockingUser = await userService.unBlockUser(req.params.id, req.userId);
     res.status(200).json({
       status: 'success',
-      user: unBlockingUser,
+      data: unBlockingUser,
     });
   } catch (e) {
     next(e);
@@ -66,7 +79,80 @@ export const adminBlockUserHandler = async (req: Request, res: Response, next: N
     const blockedUser = await userService.adminBlockUser(req.params.id);
     res.status(200).json({
       status: 'success',
-      user: blockedUser,
+      data: blockedUser,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const adminUnBlockUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const unBlockedUser = await userService.adminUnBlockUser(req.params.id);
+    res.status(200).json({
+      status: 'success',
+      data: unBlockedUser,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const updateUserInfoHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updatedUser = await userService.updateUserInfo(req.userId, req.body);
+    res.status(200).json({
+      status: 'success',
+      data: updatedUser,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const changeUserPasswordHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await userService.changeUserPassword(req.userId, req.body);
+    res.status(200).json({
+      status: 'success',
+      message: 'You have successfully changed your password!',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const forgotPasswordHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    await userService.forgotPassword(email);
+    res.status(200).json({
+      status: 'success',
+      message: 'ResetToken sent to your email!',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const resetPasswordHandler = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await userService.resetPassword(req.params.resetToken, req.body);
+    res.status(200).json({
+      status: 'success',
+      message: 'You have successfully changed your password!',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const deleteAccountHanlder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await userService.deleteAccount(req.userId);
+    res.status(200).json({
+      status: 'success',
+      message: 'User has been deleted successfully',
     });
   } catch (e) {
     next(e);

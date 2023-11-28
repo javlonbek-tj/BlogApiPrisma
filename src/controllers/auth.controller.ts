@@ -3,7 +3,6 @@ import 'dotenv/config';
 import config from 'config';
 import * as authService from '../services/auth.service';
 
-
 const cookieOptions = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   const cookieOptions: {
@@ -46,7 +45,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const userData = await authService.signin(req.body);
     res.cookie('jwt', userData.refreshToken, cookieOptions());
-    return res.status(201).json({
+    return res.status(200).json({
       status: 'success',
       userData,
     });

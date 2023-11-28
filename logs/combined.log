@@ -249,3 +249,443 @@ Null constraint violation on the fields: (`postViewerId`)
 2023-11-27 17:30:18: info: Server started on port: 3002
 2023-11-27 17:31:23: info: Server started on port: 3002
 2023-11-27 17:31:53: info: Server started on port: 3002
+2023-11-27 18:46:27: info: Server started on port: 3002
+2023-11-27 18:47:41: info: Server started on port: 3002
+2023-11-27 18:48:12: info: Server started on port: 3002
+2023-11-27 18:48:15: info: Server started on port: 3002
+2023-11-27 18:48:48: info: Server started on port: 3002
+2023-11-27 18:49:54: info: Server started on port: 3002
+2023-11-27 18:50:07: info: Server started on port: 3002
+2023-11-27 19:00:11: info: Server started on port: 3002
+2023-11-27 19:01:11: info: Server started on port: 3002
+2023-11-28 09:46:39: info: Server started on port: 3002
+2023-11-28 09:51:08: info: Server started on port: 3002
+2023-11-28 09:51:13: info: Server started on port: 3002
+2023-11-28 09:52:05: error: 
+Invalid `db.user.findUnique()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\user.service.ts:187:38
+
+  184 };
+  185 
+  186 const updateUserInfo = async (userId: string, input: updateUserInput) => {
+→ 187   const isEmailTaken = await db.user.findUnique({
+          where: {
+            email: undefined,
+        ?   id?: String,
+        ?   AND?: UserWhereInput | UserWhereInput[],
+        ?   OR?: UserWhereInput[],
+        ?   NOT?: UserWhereInput | UserWhereInput[],
+        ?   firstname?: StringFilter | String,
+        ?   lastname?: StringFilter | String,
+        ?   profilPhoto?: StringNullableFilter | String | Null,
+        ?   password?: StringFilter | String,
+        ?   isBlocked?: BoolFilter | Boolean,
+        ?   role?: EnumRoleEnumTypeFilter | RoleEnumType,
+        ?   userAward?: EnumAwardEnumTypeFilter | AwardEnumType,
+        ?   isActivated?: BoolFilter | Boolean,
+        ?   activationLink?: StringFilter | String,
+        ?   passwordChangedAt?: DateTimeNullableFilter | DateTime | Null,
+        ?   passwordResetToken?: StringNullableFilter | String | Null,
+        ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   postViewerId?: StringNullableFilter | String | Null,
+        ?   postLikeId?: StringNullableFilter | String | Null,
+        ?   postDislikeId?: StringNullableFilter | String | Null,
+        ?   viewerId?: StringNullableFilter | String | Null,
+        ?   followerId?: StringNullableFilter | String | Null,
+        ?   followingId?: StringNullableFilter | String | Null,
+        ?   blockingId?: StringNullableFilter | String | Null,
+        ?   viewers?: UserListRelationFilter,
+        ?   followers?: UserListRelationFilter,
+        ?   followings?: UserListRelationFilter,
+        ?   posts?: PostListRelationFilter,
+        ?   comments?: CommentListRelationFilter,
+        ?   blockings?: UserListRelationFilter,
+        ?   token?: TokenNullableRelationFilter | TokenWhereInput | Null,
+        ?   postViewer?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   postLike?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   postDislike?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   viewer?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   follower?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   following?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   blocking?: UserNullableRelationFilter | UserWhereInput | Null
+          }
+        })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+2023-11-28 11:23:50: info: Server started on port: 3002
+2023-11-28 11:24:05: info: Server started on port: 3002
+2023-11-28 11:24:24: error: 
+Invalid `db.user.findUnique()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\user.service.ts:187:38
+
+  184 };
+  185 
+  186 const updateUserInfo = async (userId: string, input: updateUserInput) => {
+→ 187   const isEmailTaken = await db.user.findUnique({
+          where: {
+            email: undefined,
+        ?   id?: String,
+        ?   AND?: UserWhereInput | UserWhereInput[],
+        ?   OR?: UserWhereInput[],
+        ?   NOT?: UserWhereInput | UserWhereInput[],
+        ?   firstname?: StringFilter | String,
+        ?   lastname?: StringFilter | String,
+        ?   profilPhoto?: StringNullableFilter | String | Null,
+        ?   password?: StringFilter | String,
+        ?   isBlocked?: BoolFilter | Boolean,
+        ?   role?: EnumRoleEnumTypeFilter | RoleEnumType,
+        ?   userAward?: EnumAwardEnumTypeFilter | AwardEnumType,
+        ?   isActivated?: BoolFilter | Boolean,
+        ?   activationLink?: StringFilter | String,
+        ?   passwordChangedAt?: DateTimeNullableFilter | DateTime | Null,
+        ?   passwordResetToken?: StringNullableFilter | String | Null,
+        ?   passwordResetExpires?: DateTimeNullableFilter | DateTime | Null,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   postViewerId?: StringNullableFilter | String | Null,
+        ?   postLikeId?: StringNullableFilter | String | Null,
+        ?   postDislikeId?: StringNullableFilter | String | Null,
+        ?   viewerId?: StringNullableFilter | String | Null,
+        ?   followerId?: StringNullableFilter | String | Null,
+        ?   followingId?: StringNullableFilter | String | Null,
+        ?   blockingId?: StringNullableFilter | String | Null,
+        ?   viewers?: UserListRelationFilter,
+        ?   followers?: UserListRelationFilter,
+        ?   followings?: UserListRelationFilter,
+        ?   posts?: PostListRelationFilter,
+        ?   comments?: CommentListRelationFilter,
+        ?   blockings?: UserListRelationFilter,
+        ?   token?: TokenNullableRelationFilter | TokenWhereInput | Null,
+        ?   postViewer?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   postLike?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   postDislike?: PostNullableRelationFilter | PostWhereInput | Null,
+        ?   viewer?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   follower?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   following?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   blocking?: UserNullableRelationFilter | UserWhereInput | Null
+          }
+        })
+
+Argument `where` of type UserWhereUniqueInput needs at least one of `id` or `email` arguments. Available options are marked with ?.
+2023-11-28 11:25:10: info: Server started on port: 3002
+2023-11-28 11:25:34: info: Server started on port: 3002
+2023-11-28 11:25:43: info: Server started on port: 3002
+2023-11-28 11:29:43: info: Server started on port: 3002
+2023-11-28 11:31:13: info: Server started on port: 3002
+2023-11-28 11:31:53: info: Server started on port: 3002
+2023-11-28 11:54:53: info: Server started on port: 3002
+2023-11-28 11:55:36: info: Server started on port: 3002
+2023-11-28 11:55:44: info: Server started on port: 3002
+2023-11-28 11:56:07: info: Server started on port: 3002
+2023-11-28 11:56:10: info: Server started on port: 3002
+2023-11-28 12:08:07: info: Server started on port: 3002
+2023-11-28 12:09:05: info: Server started on port: 3002
+2023-11-28 12:16:24: info: Server started on port: 3002
+2023-11-28 12:16:46: info: Server started on port: 3002
+2023-11-28 12:17:00: info: Server started on port: 3002
+2023-11-28 12:17:45: info: Server started on port: 3002
+2023-11-28 12:21:07: info: Server started on port: 3002
+2023-11-28 12:22:34: info: Server started on port: 3002
+2023-11-28 12:23:39: info: Server started on port: 3002
+2023-11-28 12:27:27: info: Server started on port: 3002
+2023-11-28 12:28:13: info: Server started on port: 3002
+2023-11-28 12:33:00: info: Server started on port: 3002
+2023-11-28 12:41:06: info: Server started on port: 3002
+2023-11-28 13:05:15: info: Server started on port: 3002
+2023-11-28 13:05:36: info: Server started on port: 3002
+2023-11-28 13:05:50: info: Server started on port: 3002
+2023-11-28 13:15:06: info: Server started on port: 3002
+2023-11-28 13:15:09: info: Server started on port: 3002
+2023-11-28 13:16:31: info: Server started on port: 3002
+2023-11-28 13:58:24: info: Server started on port: 3002
+2023-11-28 13:58:29: info: Server started on port: 3002
+2023-11-28 14:01:29: info: Server started on port: 3002
+2023-11-28 14:08:29: info: Server started on port: 3002
+2023-11-28 14:08:42: info: Server started on port: 3002
+2023-11-28 14:09:01: info: Server started on port: 3002
+2023-11-28 14:15:06: info: Server started on port: 3002
+2023-11-28 14:19:51: info: Server started on port: 3002
+2023-11-28 14:20:07: info: Server started on port: 3002
+2023-11-28 14:26:33: info: Server started on port: 3002
+2023-11-28 14:29:27: info: Server started on port: 3002
+2023-11-28 14:29:51: info: Server started on port: 3002
+2023-11-28 14:31:39: info: Server started on port: 3002
+2023-11-28 14:34:18: info: Server started on port: 3002
+2023-11-28 14:35:35: info: Server started on port: 3002
+2023-11-28 14:35:54: info: Server started on port: 3002
+2023-11-28 14:45:38: info: Server started on port: 3002
+2023-11-28 14:45:57: info: Server started on port: 3002
+2023-11-28 14:46:18: info: Server started on port: 3002
+2023-11-28 14:49:47: info: Server started on port: 3002
+2023-11-28 14:53:35: info: Server started on port: 3002
+2023-11-28 14:53:44: info: Server started on port: 3002
+2023-11-28 14:59:39: info: Server started on port: 3002
+2023-11-28 15:10:54: info: Server started on port: 3002
+2023-11-28 15:11:02: info: Server started on port: 3002
+2023-11-28 15:12:16: info: Server started on port: 3002
+2023-11-28 15:14:48: info: Server started on port: 3002
+2023-11-28 15:29:12: info: Server started on port: 3002
+2023-11-28 15:31:02: info: Server started on port: 3002
+2023-11-28 15:34:04: info: Server started on port: 3002
+2023-11-28 15:34:57: info: Server started on port: 3002
+2023-11-28 15:35:17: info: Server started on port: 3002
+2023-11-28 15:36:24: info: Server started on port: 3002
+2023-11-28 15:36:40: info: Server started on port: 3002
+2023-11-28 15:36:53: info: Server started on port: 3002
+2023-11-28 15:37:47: info: Server started on port: 3002
+2023-11-28 15:38:45: info: Server started on port: 3002
+2023-11-28 15:39:54: info: Server started on port: 3002
+2023-11-28 15:40:06: info: Server started on port: 3002
+2023-11-28 15:51:56: info: Server started on port: 3002
+2023-11-28 15:53:28: info: Server started on port: 3002
+2023-11-28 15:53:42: info: Server started on port: 3002
+2023-11-28 15:53:49: info: Server started on port: 3002
+2023-11-28 15:54:18: info: Server started on port: 3002
+2023-11-28 15:56:53: info: Server started on port: 3002
+2023-11-28 15:57:32: info: Server started on port: 3002
+2023-11-28 15:58:39: info: Server started on port: 3002
+2023-11-28 15:58:50: info: Server started on port: 3002
+2023-11-28 15:59:37: info: Server started on port: 3002
+2023-11-28 15:59:53: info: Server started on port: 3002
+2023-11-28 16:00:01: info: Server started on port: 3002
+2023-11-28 16:00:15: info: Server started on port: 3002
+2023-11-28 16:01:51: info: Server started on port: 3002
+2023-11-28 16:01:57: info: Server started on port: 3002
+2023-11-28 16:02:29: info: Server started on port: 3002
+2023-11-28 16:02:46: info: Server started on port: 3002
+2023-11-28 16:03:20: info: Server started on port: 3002
+2023-11-28 16:03:25: info: Server started on port: 3002
+2023-11-28 16:04:03: info: Server started on port: 3002
+2023-11-28 16:05:47: info: Server started on port: 3002
+2023-11-28 16:06:00: info: Server started on port: 3002
+2023-11-28 16:06:16: info: Server started on port: 3002
+2023-11-28 16:06:27: info: Server started on port: 3002
+2023-11-28 16:07:24: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:5:30
+
+  2 import db from '../utils/db';
+  3 
+  4 const create = async (authorId: string, { title, description, photo }: CreatePostInput) => {
+→ 5   const post = await db.post.create({
+        data: {
+          title: "New book public",
+          description: "Awesome book ever",
+          photo: "sfsfsfsd",
+          authorId: undefined,
+      +   author: {
+      +     create: UserCreateWithoutPostsInput | UserUncheckedCreateWithoutPostsInput,
+      +     connectOrCreate: UserCreateOrConnectWithoutPostsInput,
+      +     connect: UserWhereUniqueInput
+      +   }
+        }
+      })
+
+Argument `author` is missing.
+2023-11-28 16:07:42: info: Server started on port: 3002
+2023-11-28 16:07:58: info: Server started on port: 3002
+2023-11-28 16:08:36: info: Server started on port: 3002
+2023-11-28 16:08:49: info: Server started on port: 3002
+2023-11-28 16:08:50: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:5:30
+
+  2 import db from '../utils/db';
+  3 
+  4 const create = async (authorId: string, { title, description, photo }: CreatePostInput) => {
+→ 5   const post = await db.post.create({
+        data: {
+          title: "New book public",
+          description: "Awesome book ever",
+          photo: "sfsfsfsd",
+          authorId: undefined,
+      +   author: {
+      +     create: UserCreateWithoutPostsInput | UserUncheckedCreateWithoutPostsInput,
+      +     connectOrCreate: UserCreateOrConnectWithoutPostsInput,
+      +     connect: UserWhereUniqueInput
+      +   }
+        }
+      })
+
+Argument `author` is missing.
+2023-11-28 16:09:50: info: Server started on port: 3002
+2023-11-28 16:09:57: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:5:30
+
+  2 import db from '../utils/db';
+  3 
+  4 const create = async (authorId: string, { title, description, photo }: CreatePostInput) => {
+→ 5   const post = await db.post.create({
+        data: {
+          title: "New book public",
+          description: "Awesome book ever",
+          photo: "sfsfsfsd",
+          authorId: undefined,
+      +   author: {
+      +     create: UserCreateWithoutPostsInput | UserUncheckedCreateWithoutPostsInput,
+      +     connectOrCreate: UserCreateOrConnectWithoutPostsInput,
+      +     connect: UserWhereUniqueInput
+      +   }
+        }
+      })
+
+Argument `author` is missing.
+2023-11-28 16:10:47: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:5:30
+
+  2 import db from '../utils/db';
+  3 
+  4 const create = async (authorId: string, { title, description, photo }: CreatePostInput) => {
+→ 5   const post = await db.post.create({
+        data: {
+          title: "New book public",
+          description: "Awesome book ever",
+          photo: "sfsfsfsd",
+          authorId: undefined,
+      +   author: {
+      +     create: UserCreateWithoutPostsInput | UserUncheckedCreateWithoutPostsInput,
+      +     connectOrCreate: UserCreateOrConnectWithoutPostsInput,
+      +     connect: UserWhereUniqueInput
+      +   }
+        }
+      })
+
+Argument `author` is missing.
+2023-11-28 16:10:49: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:5:30
+
+  2 import db from '../utils/db';
+  3 
+  4 const create = async (authorId: string, { title, description, photo }: CreatePostInput) => {
+→ 5   const post = await db.post.create({
+        data: {
+          title: "New book public",
+          description: "Awesome book ever",
+          photo: "sfsfsfsd",
+          authorId: undefined,
+      +   author: {
+      +     create: UserCreateWithoutPostsInput | UserUncheckedCreateWithoutPostsInput,
+      +     connectOrCreate: UserCreateOrConnectWithoutPostsInput,
+      +     connect: UserWhereUniqueInput
+      +   }
+        }
+      })
+
+Argument `author` is missing.
+2023-11-28 16:11:22: info: Server started on port: 3002
+2023-11-28 16:11:33: info: Server started on port: 3002
+2023-11-28 16:19:53: info: Server started on port: 3002
+2023-11-28 16:20:40: info: Server started on port: 3002
+2023-11-28 16:21:41: info: Server started on port: 3002
+2023-11-28 16:21:53: info: Server started on port: 3002
+2023-11-28 16:23:18: info: Server started on port: 3002
+2023-11-28 16:25:00: info: Server started on port: 3002
+2023-11-28 16:27:13: info: Server started on port: 3002
+2023-11-28 16:28:01: info: Server started on port: 3002
+2023-11-28 16:28:24: info: Server started on port: 3002
+2023-11-28 16:29:09: info: Server started on port: 3002
+2023-11-28 16:29:31: info: Server started on port: 3002
+2023-11-28 16:35:55: info: Server started on port: 3002
+2023-11-28 16:36:30: info: Server started on port: 3002
+2023-11-28 16:37:17: info: Server started on port: 3002
+2023-11-28 16:41:42: info: Server started on port: 3002
+2023-11-28 16:43:58: info: Server started on port: 3002
+2023-11-28 16:44:23: info: Server started on port: 3002
+2023-11-28 16:48:59: info: Server started on port: 3002
+2023-11-28 16:49:05: info: Server started on port: 3002
+2023-11-28 16:50:03: info: Server started on port: 3002
+2023-11-28 16:50:07: info: Server started on port: 3002
+2023-11-28 16:50:29: info: Server started on port: 3002
+2023-11-28 16:58:41: info: Server started on port: 3002
+2023-11-28 16:58:57: info: Server started on port: 3002
+2023-11-28 17:01:11: info: Server started on port: 3002
+2023-11-28 17:04:03: info: Server started on port: 3002
+2023-11-28 17:04:29: info: Server started on port: 3002
+2023-11-28 17:07:30: info: Server started on port: 3002
+2023-11-28 17:08:44: info: Server started on port: 3002
+2023-11-28 17:10:21: info: Server started on port: 3002
+2023-11-28 17:10:39: info: Server started on port: 3002
+2023-11-28 17:11:09: info: Server started on port: 3002
+2023-11-28 17:11:23: info: Server started on port: 3002
+2023-11-28 17:11:52: info: Server started on port: 3002
+2023-11-28 17:12:31: info: Server started on port: 3002
+2023-11-28 17:15:11: info: Server started on port: 3002
+2023-11-28 17:16:42: info: Server started on port: 3002
+2023-11-28 17:31:58: info: Server started on port: 3002
+2023-11-28 17:34:21: info: Server started on port: 3002
+2023-11-28 17:36:27: info: Server started on port: 3002
+2023-11-28 17:52:40: info: Server started on port: 3002
+2023-11-28 17:53:04: info: Server started on port: 3002
+2023-11-28 17:53:58: info: Server started on port: 3002
+2023-11-28 17:54:31: info: Server started on port: 3002
+2023-11-28 17:54:51: info: Server started on port: 3002
+2023-11-28 17:55:10: info: Server started on port: 3002
+2023-11-28 17:57:26: info: Server started on port: 3002
+2023-11-28 17:59:06: info: Server started on port: 3002
+2023-11-28 18:02:27: info: Server started on port: 3002
+2023-11-28 18:02:42: info: Server started on port: 3002
+2023-11-28 18:19:36: info: Server started on port: 3002
+2023-11-28 18:20:13: error: 
+Invalid `db.user.delete()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\user.service.ts:317:23
+
+  314 };
+  315 
+  316 const deleteAccount = async (userId: string) => {
+→ 317   await db.user.delete(
+Foreign key constraint failed on the field: `Token_userId_fkey (index)`
+2023-11-28 18:20:49: info: Server started on port: 3002
+2023-11-28 18:21:11: info: Server started on port: 3002
+2023-11-28 18:21:12: error: 
+Invalid `db.user.delete()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\user.service.ts:317:23
+
+  314 };
+  315 
+  316 const deleteAccount = async (userId: string) => {
+→ 317   await db.user.delete(
+Foreign key constraint failed on the field: `Token_userId_fkey (index)`
+2023-11-28 18:23:19: info: Server started on port: 3002
+2023-11-28 18:23:36: info: Server started on port: 3002
+2023-11-28 18:23:44: info: Server started on port: 3002
+2023-11-28 18:25:33: info: Server started on port: 3002
+2023-11-28 18:25:39: info: Server started on port: 3002
+2023-11-28 18:26:21: info: Server started on port: 3002
+2023-11-28 18:26:47: info: Server started on port: 3002
+2023-11-28 18:30:05: info: Server started on port: 3002
+2023-11-28 18:30:13: info: Server started on port: 3002
+2023-11-28 18:30:41: info: Server started on port: 3002
+2023-11-28 18:31:30: info: Server started on port: 3002
+2023-11-28 18:31:42: info: Server started on port: 3002
+2023-11-28 18:36:09: info: Server started on port: 3002
+2023-11-28 18:38:28: info: Server started on port: 3002
+2023-11-28 18:38:59: info: Server started on port: 3002
+2023-11-28 18:39:43: info: Server started on port: 3002
+2023-11-28 18:42:55: info: Server started on port: 3002
+2023-11-28 18:43:06: info: Server started on port: 3002
+2023-11-28 18:49:38: info: Server started on port: 3002
+2023-11-28 18:51:27: info: Server started on port: 3002
+2023-11-28 18:51:42: info: Server started on port: 3002
+2023-11-28 18:51:56: info: Server started on port: 3002
+2023-11-28 18:52:33: info: Server started on port: 3002
+2023-11-28 18:52:43: info: Server started on port: 3002
+2023-11-28 18:53:17: info: Server started on port: 3002
+2023-11-28 18:53:20: info: Server started on port: 3002
+2023-11-28 18:53:54: info: Server started on port: 3002
+2023-11-28 18:55:12: error: 
+Invalid `db.post.create()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:6:30
+
+  3 import db from '../utils/db';
+  4 
+  5 const create = async (authorId: string, { title, description, photo, categories }: CreatePostInput) => {
+→ 6   const post = await db.post.create(
+An operation failed because it depends on one or more records that were required but not found. Expected 2 records to be connected, found only 1.
+2023-11-28 18:57:55: info: Server started on port: 3002
+2023-11-28 18:58:13: info: Server started on port: 3002
+2023-11-28 18:59:06: info: Server started on port: 3002

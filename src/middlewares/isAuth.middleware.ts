@@ -3,7 +3,7 @@ import ApiError from '../utils/appError';
 import * as tokenService from '../services/token.service';
 import db from '../utils/db';
 import { changedPasswordAfter } from '../services/user.service';
-import { RoleEnumType } from '@prisma/client';
+import { RoleEnumType } from '../schemas/user.schema';
 
 declare global {
   namespace Express {
@@ -43,7 +43,7 @@ type UserRole = keyof typeof RoleEnumType;
 export function restrictTo(...roles: UserRole[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const user = await db.user.findUnique({ where: { id: req.userId } });
-    if (user && !roles.includes(user.role as UserRole)) {
+    if (user && !roles.includes(user.role)) {
       return next(ApiError.UnauthorizedError());
     }
     next();

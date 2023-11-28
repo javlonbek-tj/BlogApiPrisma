@@ -1,7 +1,13 @@
-import { User } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import 'dotenv/config';
+import config from 'config';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
 import { getUserSelectFields } from '../utils/getUserSelectedField';
+import { resetPasswordInput, updatePasswordInput, updateUserInput } from '../schemas/user.schema';
+import * as tokenService from './token.service';
+import { sendMail } from './mail.service';
 
 const changedPasswordAfter = (JWTTimestamp: number, passwordChangedAt: Date | null): boolean => {
   if (passwordChangedAt) {
@@ -11,9 +17,23 @@ const changedPasswordAfter = (JWTTimestamp: number, passwordChangedAt: Date | nu
   return false;
 };
 
+const createPasswordResetToken = async (email: string) => {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  const passwordResetExpires: number = Date.now() + 10 * 60 * 1000;
+  await db.user.update({
+    where: { email },
+    data: {
+      passwordResetToken,
+      passwordResetExpires,
+    },
+  });
+  return resetToken;
+};
+
 const findOne = async (userId: string) => {
-  const user = await db.user.findUnique({ where: { id: userId } });
-  if (!userId) {
+  const user = await db.user.findUnique({ where: { id: userId }, select: getUserSelectFields() });
+  if (!user) {
     throw ApiError.BadRequest('User not Found');
   }
   return user;
@@ -165,4 +185,151 @@ const adminBlockUser = async (userId: string) => {
   });
 };
 
-export { visitUserProfile, changedPasswordAfter, followUser, unFollowUser, blockUser, unBlockUser, adminBlockUser };
+const adminUnBlockUser = async (userId: string) => {
+  const userToBeUnBlocked = await db.user.findUnique({ where: { id: userId } });
+  if (!userToBeUnBlocked) {
+    throw ApiError.BadRequest('User not found');
+  }
+  if (!userToBeUnBlocked.isBlocked) {
+    throw ApiError.BadRequest('User is not blocked');
+  }
+  return db.user.update({
+    where: { id: userId },
+    data: {
+      isBlocked: false,
+    },
+    select: getUserSelectFields(),
+  });
+};
+
+const updateUserInfo = async (userId: string, input: updateUserInput) => {
+  if (input.email) {
+    const isEmailTaken = await db.user.findUnique({ where: { email: input.email } });
+    if (isEmailTaken) {
+      throw ApiError.BadRequest(`${input.email} is already taken`);
+    }
+  }
+  const dataToUpdate: updateUserInput = {};
+
+  if (input.firstname !== undefined) {
+    dataToUpdate.firstname = input.firstname;
+  }
+
+  if (input.lastname !== undefined) {
+    dataToUpdate.lastname = input.lastname;
+  }
+
+  if (input.email !== undefined) {
+    dataToUpdate.email = input.email;
+  }
+
+  if (input.profilPhoto !== undefined) {
+    dataToUpdate.profilPhoto = input.profilPhoto;
+  }
+  return db.user.update({
+    where: { id: userId },
+    data: dataToUpdate,
+    select: getUserSelectFields(),
+  });
+};
+
+const changeUserPassword = async (userId: string, { oldPass, newPass, newPassConfirm }: updatePasswordInput) => {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw ApiError.BadRequest('User not Found');
+  }
+  const isPassEquals = await bcrypt.compare(oldPass, user.password);
+  if (!isPassEquals) {
+    throw ApiError.BadRequest('Old password is incorrect');
+  }
+  if (newPass !== newPassConfirm) {
+    throw ApiError.BadRequest('New Password and Password Confirmation are not the same');
+  }
+  const hashPassword = await bcrypt.hash(newPass, 10);
+  return db.user.update({
+    where: { id: userId },
+    data: {
+      password: hashPassword,
+    },
+    select: getUserSelectFields(),
+  });
+};
+
+const forgotPassword = async (email: string) => {
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) {
+    throw ApiError.BadRequest('User not Found');
+  }
+  const resetToken = await createPasswordResetToken(email);
+  const resetUrl = `${config.get<string>('apiUrl')}/users/resetPassword/${resetToken}`;
+
+  // Send resetUrl to user's email
+  /* try {
+    const subject = 'Your password reset token (valid for only 10 minutes)';
+    const link = `${config.get<string>('apiUrl')}/users/resetPassword/${resetUrl}`;
+    const html = `<div>
+            <h1>For reset password hit this link</h1>
+            <a href="${link}">${link}</a>
+            </div>`;
+    sendMail(email, subject, html);
+  } catch (e) {
+    db.user.update({
+      where: { email },
+      data: {
+        passwordResetToken: null,
+        passwordResetExpires: null,
+      },
+    });
+  } */
+};
+
+const resetPassword = async (resetToken: string, { password }: resetPasswordInput) => {
+  const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  const user = await db.user.findFirst({
+    where: {
+      passwordResetToken,
+      passwordResetExpires: {
+        gt: Date.now(),
+      },
+    },
+  });
+  if (!user) {
+    throw ApiError.BadRequest('Token is invalid or has expired');
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await db.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: hashedPassword,
+      passwordResetToken: null,
+      passwordResetExpires: null,
+      passwordChangedAt: new Date(),
+    },
+  });
+  const tokens = tokenService.generateTokens({ id: user.id, email: user.email });
+  await tokenService.saveToken(user.id, tokens.refreshToken);
+  return { ...tokens, user };
+};
+
+const deleteAccount = async (userId: string) => {
+  await db.user.delete({ where: { id: userId } });
+};
+
+export {
+  findOne,
+  visitUserProfile,
+  changedPasswordAfter,
+  followUser,
+  unFollowUser,
+  blockUser,
+  unBlockUser,
+  adminBlockUser,
+  adminUnBlockUser,
+  updateUserInfo,
+  changeUserPassword,
+  forgotPassword,
+  resetPassword,
+  deleteAccount,
+};

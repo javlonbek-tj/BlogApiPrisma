@@ -27,7 +27,7 @@ model User {
   activationLink       String
   passwordChangedAt    DateTime?
   passwordResetToken   String?
-  passwordResetExpires DateTime?
+  passwordResetExpires Int?
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   token                Token?
@@ -65,7 +65,7 @@ model Post {
 
 model Category {
   id        String   @id @default(uuid())
-  title     String
+  title     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Post      Post[]
@@ -84,7 +84,7 @@ model Comment {
 
 model Token {
   id           String @id @default(uuid())
-  user         User   @relation(fields: [userId], references: [id])
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String @unique
   refreshToken String
 }
