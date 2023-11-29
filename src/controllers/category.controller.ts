@@ -1,4 +1,4 @@
-import { DeleteCategoryInput, GetCategoryInput, UpdateCategoryInput, CreateCategoryInput } from './../schemas/category.schema';
+import { GetCategoryInput, UpdateCategoryInput, CreateCategoryInput } from './../schemas/category.schema';
 import { NextFunction, Request, Response } from 'express';
 import * as categoryService from '../services/category.service';
 
@@ -50,10 +50,10 @@ export const updateCategoryHandler = async (req: Request<GetCategoryInput, {}, U
   }
 };
 
-export const deleteCategoryHandler = async (req: Request<DeleteCategoryInput>, res: Response, next: NextFunction) => {
+export const deleteCategoryHandler = async (req: Request<GetCategoryInput>, res: Response, next: NextFunction) => {
   try {
     await categoryService.deleteCategory(req.params.categoryId);
-    return res.status(200).json({
+    return res.status(204).json({
       status: 'success',
       message: 'Category has been deleted successfully',
     });

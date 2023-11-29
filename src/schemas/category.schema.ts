@@ -33,14 +33,8 @@ export const updateCategorySchema = z.object({
   }),
 });
 
-export const deleteCategorySchema = z.object({
-  ...params,
-});
-
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>['body'];
 
 export type GetCategoryInput = z.infer<typeof getCategorySchema>['params'];
 
 export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>['body'];
-
-export type DeleteCategoryInput = z.infer<typeof deleteCategorySchema>['params'];

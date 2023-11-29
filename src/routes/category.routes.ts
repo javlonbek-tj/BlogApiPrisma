@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validate } from '../middlewares/validate';
-import { createCategorySchema, deleteCategorySchema, getCategorySchema, updateCategorySchema } from '../schemas/category.schema';
+import { createCategorySchema, updateCategorySchema } from '../schemas/category.schema';
 import {
   allCategoriesHandler,
   createCategoryHandler,

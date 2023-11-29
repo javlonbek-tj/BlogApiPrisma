@@ -39,3 +39,17 @@ export const getUserSelectFields = (includePassword = false): UserSelect => ({
   createdAt: true,
   updatedAt: true,
 });
+
+export const getLikesDislikesInclude = () => ({
+  likes: { select: { id: true } },
+  dislikes: { select: { id: true } },
+});
+
+export const getPostInclude = () => ({
+  author: { select: getUserSelectFields() },
+  likes: { select: getUserSelectFields() },
+  dislikes: { select: getUserSelectFields() },
+  numViews: { select: getUserSelectFields() },
+  comments: true,
+  category: { select: { title: true } },
+});

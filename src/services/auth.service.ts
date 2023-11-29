@@ -7,7 +7,7 @@ import ApiError from '../utils/appError';
 import db from '../utils/db';
 import { sendMail } from './mail.service';
 import * as tokenService from './token.service';
-import { getUserSelectFields } from '../utils/getUserSelectedField';
+import { getUserSelectFields } from '../utils/getSelectedField';
 
 const signup = async ({ firstname, lastname, email, password, role }: CreateUserInput) => {
   const isUserExists = await db.user.findUnique({

@@ -4,7 +4,7 @@ import 'dotenv/config';
 import config from 'config';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
-import { getUserSelectFields } from '../utils/getUserSelectedField';
+import { getUserSelectFields } from '../utils/getSelectedField';
 import { resetPasswordInput, updatePasswordInput, updateUserInput } from '../schemas/user.schema';
 import * as tokenService from './token.service';
 import { sendMail } from './mail.service';

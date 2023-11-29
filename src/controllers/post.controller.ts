@@ -16,10 +16,11 @@ export const createPostHandler = async (req: Request<{}, {}, CreatePostInput>, r
 
 export const allPostsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const categories = await postService.allPosts();
+    const posts = await postService.allPosts(req.userId);
     return res.status(200).json({
       status: 'success',
-      data: categories,
+      data: posts,
+      numberOfPosts: posts.length,
     });
   } catch (e) {
     next(e);
@@ -28,7 +29,7 @@ export const allPostsHandler = async (req: Request, res: Response, next: NextFun
 
 export const onePostHandler = async (req: Request<GetPostInput>, res: Response, next: NextFunction) => {
   try {
-    const post = await postService.onePost(req.params.postId);
+    const post = await postService.onePost(req.params.postId, req.userId);
     return res.status(200).json({
       status: 'success',
       data: post,
@@ -40,7 +41,7 @@ export const onePostHandler = async (req: Request<GetPostInput>, res: Response, 
 
 export const updatePostHandler = async (req: Request<GetPostInput, {}, UpdatePostInput>, res: Response, next: NextFunction) => {
   try {
-    const post = await postService.updatePost(req.params.postId, req.body);
+    const post = await postService.updatePost(req.params.postId, req.userId, req.body);
     return res.status(200).json({
       status: 'success',
       data: post,
@@ -52,10 +53,34 @@ export const updatePostHandler = async (req: Request<GetPostInput, {}, UpdatePos
 
 export const deletePostHandler = async (req: Request<DeletePostInput>, res: Response, next: NextFunction) => {
   try {
-    await postService.deletepost(req.params.postId);
-    return res.status(200).json({
+    await postService.deletepost(req.params.postId, req.userId);
+    return res.status(204).json({
       status: 'success',
       message: 'Post has been deleted successfully',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const toggleLikesHandler = async (req: Request<GetPostInput>, res: Response, next: NextFunction) => {
+  try {
+    const post = await postService.toggleLikes(req.params.postId, req.userId);
+    return res.status(200).json({
+      status: 'success',
+      data: post,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const toggleDIsLikesHandler = async (req: Request<GetPostInput>, res: Response, next: NextFunction) => {
+  try {
+    const post = await postService.toggleDisLikes(req.params.postId, req.userId);
+    return res.status(200).json({
+      status: 'success',
+      data: post,
     });
   } catch (e) {
     next(e);

@@ -283,3 +283,70 @@ C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\sr
   5 const create = async (authorId: string, { title, description, photo, categories }: CreatePostInput) => {
 → 6   const post = await db.post.create(
 An operation failed because it depends on one or more records that were required but not found. Expected 2 records to be connected, found only 1.
+2023-11-29 10:56:48: error: 
+Invalid `db.post.update()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:62:17
+
+  59 if (isViewed) {
+  60   return post;
+  61 }
+→ 62 await db.post.update({
+       where: {
+         id: "8bc3962a-603d-4259-a271-0e58a56373eb"
+       },
+       data: {
+         numViews: {
+           connect: {
+             id: undefined
+           }
+           ~~~~~~~~~~~~~~~
+         }
+       }
+     })
+
+Argument `connect`: Invalid value provided. Expected UserWhereUniqueInput[], provided Object.
+2023-11-29 12:51:26: error: 
+Invalid `db.post.findMany()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:22:31
+
+  19 };
+  20 
+  21 const allPosts = async (userId: string) => {
+→ 22   const posts = await db.post.findMany(
+Unknown nested field 'viewers' for operation comments does not match any query.
+2023-11-29 12:51:34: error: 
+Invalid `db.post.findMany()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:22:31
+
+  19 };
+  20 
+  21 const allPosts = async (userId: string) => {
+→ 22   const posts = await db.post.findMany(
+Unknown nested field 'viewers' for operation comments does not match any query.
+2023-11-29 13:55:18: error: 
+Invalid `db.post.findMany()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:22:31
+
+  19 };
+  20 
+  21 const allPosts = async (userId: string) => {
+→ 22   const posts = await db.post.findMany(
+Unknown nested field 'viewers' for operation comments does not match any query.
+2023-11-29 13:55:32: error: 
+Invalid `db.post.findMany()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:22:31
+
+  19 };
+  20 
+  21 const allPosts = async (userId: string) => {
+→ 22   const posts = await db.post.findMany(
+Unknown nested field 'viewers' for operation comments does not match any query.
+2023-11-29 13:56:01: error: 
+Invalid `db.post.findMany()` invocation in
+C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\src\services\post.service.ts:22:31
+
+  19 };
+  20 
+  21 const allPosts = async (userId: string) => {
+→ 22   const posts = await db.post.findMany(
+Unknown nested field 'viewers' for operation comments does not match any query.

@@ -150,7 +150,7 @@ export const resetPasswordHandler = async (req: Request, res: Response, next: Ne
 export const deleteAccountHanlder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await userService.deleteAccount(req.userId);
-    res.status(200).json({
+    res.status(204).json({
       status: 'success',
       message: 'User has been deleted successfully',
     });
