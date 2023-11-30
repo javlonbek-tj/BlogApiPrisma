@@ -26,7 +26,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
 
 const upload = multer({
   storage: fileStorage,
-  fileFilter: fileFilter,
+  fileFilter,
 });
 
 export default upload;

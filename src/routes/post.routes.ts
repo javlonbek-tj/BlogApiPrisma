@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { validate } from '../middlewares/validate';
-import { createPostSchema, getPostSchema, updatePostSchema } from '../schemas/post.schema';
+import { createPostSchema, updatePostSchema } from '../schemas/post.schema';
 import {
   allPostsHandler,
   createPostHandler,
   deletePostHandler,
+  fileUploadMiddleware,
   onePostHandler,
   toggleDIsLikesHandler,
   toggleLikesHandler,
@@ -14,7 +15,9 @@ import { isAuth, restrictTo } from '../middlewares/isAuth.middleware';
 
 const postRoutes = Router();
 
-postRoutes.route('/').post(isAuth, validate(createPostSchema), createPostHandler).get(isAuth, allPostsHandler);
+postRoutes.post('/', isAuth, fileUploadMiddleware, validate(createPostSchema), createPostHandler);
+
+postRoutes.get('/', isAuth, allPostsHandler);
 
 postRoutes
   .route('/:postId')
