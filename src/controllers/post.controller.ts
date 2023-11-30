@@ -1,13 +1,30 @@
 import { NextFunction, Request, Response } from 'express';
 import * as postService from '../services/post.service';
 import { CreatePostInput, DeletePostInput, GetPostInput, UpdatePostInput } from '../schemas/post.schema';
+import upload from '../utils/fileUpload';
 
 export const createPostHandler = async (req: Request<{}, {}, CreatePostInput>, res: Response, next: NextFunction) => {
   try {
-    const post = await postService.create(req.userId, req.body);
-    return res.status(201).json({
-      status: 'success',
-      data: post,
+    const fileUploadMiddleware = upload.single('photo');
+    fileUploadMiddleware(req, res, async err => {
+      if (err) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Error while uploading file. Please try again!',
+        });
+      }
+      if (!req.file || !req.file.path) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Please upload a file!',
+        });
+      }
+      const photo = req.file.path;
+      const post = await postService.create(req.userId, photo, req.body);
+      return res.status(201).json({
+        status: 'success',
+        data: post,
+      });
     });
   } catch (e) {
     next(e);

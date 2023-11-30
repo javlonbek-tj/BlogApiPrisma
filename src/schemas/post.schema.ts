@@ -14,10 +14,6 @@ export const createPostSchema = z.object({
         invalid_type_error: 'description must be a string',
       })
       .trim(),
-    photo: z.string({
-      required_error: 'photo is required',
-      invalid_type_error: 'photo must be a string',
-    }),
     categories: z.array(z.string()),
   }),
 });
@@ -46,11 +42,6 @@ export const updatePostSchema = z.object({
         invalid_type_error: 'description must be a string',
       })
       .trim()
-      .optional(),
-    photo: z
-      .string({
-        invalid_type_error: 'photo must be a string',
-      })
       .optional(),
     categories: z.array(z.string()).optional(),
   }),

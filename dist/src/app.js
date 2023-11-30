@@ -10,15 +10,19 @@ const path_1 = __importDefault(require("path"));
 const helmet_1 = __importDefault(require("helmet"));
 const compression_1 = __importDefault(require("compression"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const error_middleware_1 = __importDefault(require("./middlewares/error.middleware"));
 const routes_1 = __importDefault(require("./routes"));
 const logger_1 = __importDefault(require("./utils/logger"));
+const validateEnv_1 = __importDefault(require("./utils/validateEnv"));
 const port = config_1.default.get('port');
 async function start() {
     try {
+        (0, validateEnv_1.default)();
         const app = (0, express_1.default)();
-        app.use('/uploads', express_1.default.static(path_1.default.resolve('images')));
+        app.use('/uploads', express_1.default.static(path_1.default.resolve('uploads')));
         app.use(express_1.default.json());
+        app.use((0, cookie_parser_1.default)());
         app.use(express_1.default.urlencoded({ extended: true }));
         app.use((0, helmet_1.default)());
         app.use((0, compression_1.default)());

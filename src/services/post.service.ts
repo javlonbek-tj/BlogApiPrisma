@@ -3,7 +3,7 @@ import ApiError from '../utils/appError';
 import db from '../utils/db';
 import { getLikesDislikesInclude, getPostInclude, getUserSelectFields } from '../utils/getSelectedField';
 
-const create = async (authorId: string, { title, description, photo, categories }: CreatePostInput) => {
+const create = async (authorId: string, photo: string, { title, description, categories }: CreatePostInput) => {
   const user = await db.user.findUnique({ where: { id: authorId } });
   if (user?.isBlocked) {
     throw new ApiError(403, 'Your account is blocked');
@@ -89,6 +89,7 @@ const onePost = async (postId: string, userId: string) => {
 };
 
 const updatePost = async (postId: string, userId: string, input: UpdatePostInput) => {
+  // UPDATE PHOTO AS WELL!!
   const post = await db.post.findUnique({ where: { id: postId } });
   if (!post) {
     throw ApiError.BadRequest('Post not Found');
@@ -107,9 +108,9 @@ const updatePost = async (postId: string, userId: string, input: UpdatePostInput
     dataToUpdate.description = input.description;
   }
 
-  if (input.photo !== undefined) {
+  /*  if (input.photo !== undefined) {
     dataToUpdate.photo = input.photo;
-  }
+  } */
 
   if (input.categories !== undefined) {
     dataToUpdate.categories = input.categories;

@@ -350,3 +350,7 @@ C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\sr
   21 const allPosts = async (userId: string) => {
 → 22   const posts = await db.post.findMany(
 Unknown nested field 'viewers' for operation comments does not match any query.
+2023-11-30 15:28:40: error: Unexpected end of form
+2023-11-30 15:47:24: error: ENOENT: no such file or directory, open 'C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\uploads\C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\uploads\2023-11-30-image_2023-11-21_10-42-35.png'
+2023-11-30 15:50:34: error: ENOENT: no such file or directory, open 'C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\uploads\C:\Users\j.turdimatov\Desktop\Новая папка\Desktop\Mine\Main\BlogApi\uploads\2023-11-30-image_2023-11-21_10-42-35.png'
+2023-11-30 16:01:14: error: ENOENT: no such file or directory, open 'C:\uploads\2023-11-30\2023-11-30-image_2023-11-21_10-42-35.png'

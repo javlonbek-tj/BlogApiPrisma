@@ -10,7 +10,6 @@ import errorMiddleware from './middlewares/error.middleware';
 import api from './routes';
 import logger from './utils/logger';
 import validateEnv from './utils/validateEnv';
-import { isAuth } from './middlewares/isAuth.middleware';
 
 const port: number = config.get<number>('port');
 
@@ -19,7 +18,7 @@ async function start(): Promise<void> {
     validateEnv();
     const app: Express = express();
 
-    app.use('/uploads', express.static(path.resolve('images')));
+    app.use('/uploads', express.static(path.resolve('uploads')));
 
     app.use(express.json());
     app.use(cookieParser());

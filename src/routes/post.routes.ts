@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validate } from '../middlewares/validate';
-import { createPostSchema, deletePostSchema, getPostSchema, updatePostSchema } from '../schemas/post.schema';
+import { createPostSchema, getPostSchema, updatePostSchema } from '../schemas/post.schema';
 import {
   allPostsHandler,
   createPostHandler,
