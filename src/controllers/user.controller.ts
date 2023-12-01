@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as userService from '../services/user.service';
-import { GetUserInput } from '../schemas/user.schema';
+import { GetUserInput, UpdateUserInput } from '../schemas/user.schema';
 
 export const visitUserProfileHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -26,9 +26,9 @@ export const oneUserHandler = async (req: Request<GetUserInput>, res: Response, 
   }
 };
 
-export const followerUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const followerUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const followingUser = await userService.followUser(req.params.id, req.userId);
+    const followingUser = await userService.followUser(req.params.userId, req.userId);
     res.status(200).json({
       status: 'success',
       data: followingUser,
@@ -38,9 +38,9 @@ export const followerUserHandler = async (req: Request, res: Response, next: Nex
   }
 };
 
-export const unFollowerUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const unFollowerUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const unFollowingUser = await userService.unFollowUser(req.params.id, req.userId);
+    const unFollowingUser = await userService.unFollowUser(req.params.userId, req.userId);
     res.status(200).json({
       status: 'success',
       data: unFollowingUser,
@@ -50,9 +50,9 @@ export const unFollowerUserHandler = async (req: Request, res: Response, next: N
   }
 };
 
-export const blockUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const blockUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const blockingUser = await userService.blockUser(req.params.id, req.userId);
+    const blockingUser = await userService.blockUser(req.params.userId, req.userId);
     res.status(200).json({
       status: 'success',
       data: blockingUser,
@@ -62,9 +62,9 @@ export const blockUserHandler = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const unBlockUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const unBlockUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const unBlockingUser = await userService.unBlockUser(req.params.id, req.userId);
+    const unBlockingUser = await userService.unBlockUser(req.params.userId, req.userId);
     res.status(200).json({
       status: 'success',
       data: unBlockingUser,
@@ -74,9 +74,9 @@ export const unBlockUserHandler = async (req: Request, res: Response, next: Next
   }
 };
 
-export const adminBlockUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const adminBlockUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const blockedUser = await userService.adminBlockUser(req.params.id);
+    const blockedUser = await userService.adminBlockUser(req.params.userId);
     res.status(200).json({
       status: 'success',
       data: blockedUser,
@@ -86,9 +86,9 @@ export const adminBlockUserHandler = async (req: Request, res: Response, next: N
   }
 };
 
-export const adminUnBlockUserHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const adminUnBlockUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const unBlockedUser = await userService.adminUnBlockUser(req.params.id);
+    const unBlockedUser = await userService.adminUnBlockUser(req.params.userId);
     res.status(200).json({
       status: 'success',
       data: unBlockedUser,
@@ -98,9 +98,10 @@ export const adminUnBlockUserHandler = async (req: Request, res: Response, next:
   }
 };
 
-export const updateUserInfoHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUserInfoHandler = async (req: Request<{}, {}, UpdateUserInput>, res: Response, next: NextFunction) => {
   try {
-    const updatedUser = await userService.updateUserInfo(req.userId, req.body);
+    const profilPhoto = req.file?.path;
+    const updatedUser = await userService.updateUserInfo(req.userId, { ...req.body, profilPhoto });
     res.status(200).json({
       status: 'success',
       data: updatedUser,

@@ -20,13 +20,15 @@ export const createUserSchema = z.object({
           required_error: 'Firstname is required',
           invalid_type_error: 'Firstname must be a string',
         })
-        .trim(),
+        .trim()
+        .min(1, { message: "Firstname can't be empty" }),
       lastname: z
         .string({
           required_error: 'Lastname is required',
           invalid_type_error: 'Lastname must be a string',
         })
-        .trim(),
+        .trim()
+        .min(1, { message: "Lastname can't be empty" }),
       email: z
         .string({
           required_error: 'Email is required',
@@ -62,6 +64,12 @@ export const loginUserSchema = z.object({
   }),
 });
 
+const params = {
+  params: z.object({
+    userId: z.string(),
+  }),
+};
+
 export const updateUserSchema = z.object({
   body: z.object({
     firstname: z
@@ -69,12 +77,14 @@ export const updateUserSchema = z.object({
         invalid_type_error: 'Firstname must be a string',
       })
       .trim()
+      .min(1, { message: "Firstname can't be empty" })
       .optional(),
     lastname: z
       .string({
         invalid_type_error: 'Lastname must be a string',
       })
       .trim()
+      .min(1, { message: "Firstname can't be empty" })
       .optional(),
     email: z.string().email({ message: 'Invalid email' }).optional(),
     profilPhoto: z.string().optional(),
@@ -120,20 +130,16 @@ export const resetPasswordSchema = z.object({
     }),
 });
 
-export const getUserSchema = z.object({
-  params: z.object({
-    userId: z.string(),
-  }),
-});
+export const getUserSchema = z.object({ ...params });
 
 export type CreateUserInput = Omit<z.infer<typeof createUserSchema>['body'], 'passwordConfirm'>;
 
 export type LoginUserInput = z.infer<typeof loginUserSchema>['body'];
 
-export type updateUserInput = z.infer<typeof updateUserSchema>['body'];
+export type UpdateUserInput = z.infer<typeof updateUserSchema>['body'];
 
-export type updatePasswordInput = z.infer<typeof updatePasswordSchema>['body'];
+export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>['body'];
 
-export type resetPasswordInput = z.infer<typeof resetPasswordSchema>['body'];
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>['body'];
 
 export type GetUserInput = z.infer<typeof getUserSchema>['params'];

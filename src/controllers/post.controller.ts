@@ -1,36 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import * as postService from '../services/post.service';
 import { CreatePostInput, DeletePostInput, GetPostInput, UpdatePostInput } from '../schemas/post.schema';
-import upload from '../utils/fileUpload';
 
-export const fileUploadMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const singleUpload = upload.single('photo');
-  singleUpload(req, res, (err: any) => {
-    if (err) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Error while uploading file. Please try again!',
-      });
-    }
+export const createPostHandler = async (req: Request<{}, {}, CreatePostInput>, res: Response, next: NextFunction) => {
+  try {
     if (!req.file || !req.file.path) {
       return res.status(400).json({
         status: 'fail',
         message: 'Please upload a file!',
       });
     }
-    next();
-  });
-};
-
-export const createPostHandler = async (req: Request<{}, {}, CreatePostInput>, res: Response, next: NextFunction) => {
-  try {
-    const photo = req.file?.path;
-    if (!photo) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Please upload a file!',
-      });
-    }
+    const photo = req.file.path;
     const post = await postService.create(req.userId, photo, req.body);
     return res.status(201).json({
       status: 'success',
@@ -68,7 +48,8 @@ export const onePostHandler = async (req: Request<GetPostInput>, res: Response, 
 
 export const updatePostHandler = async (req: Request<GetPostInput, {}, UpdatePostInput>, res: Response, next: NextFunction) => {
   try {
-    const post = await postService.updatePost(req.params.postId, req.userId, req.body);
+    const photo = req.file?.path;
+    const post = await postService.updatePost(req.params.postId, req.userId, { ...req.body, photo });
     return res.status(200).json({
       status: 'success',
       data: post,

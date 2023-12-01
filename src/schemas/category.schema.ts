@@ -7,7 +7,8 @@ export const createCategorySchema = z.object({
         required_error: 'Title is required',
         invalid_type_error: 'Title must be a string',
       })
-      .trim(),
+      .trim()
+      .min(1, { message: "Description can't be empty" }),
   }),
 });
 
@@ -22,13 +23,13 @@ export const getCategorySchema = z.object({
 });
 
 export const updateCategorySchema = z.object({
-  ...params,
   body: z.object({
     title: z
       .string({
         invalid_type_error: 'Title must be a string',
       })
       .trim()
+      .min(1, { message: "Description can't be empty" })
       .optional(),
   }),
 });

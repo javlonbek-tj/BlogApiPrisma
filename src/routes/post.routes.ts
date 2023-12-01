@@ -5,24 +5,22 @@ import {
   allPostsHandler,
   createPostHandler,
   deletePostHandler,
-  fileUploadMiddleware,
   onePostHandler,
   toggleDIsLikesHandler,
   toggleLikesHandler,
   updatePostHandler,
 } from '../controllers/post.controller';
 import { isAuth, restrictTo } from '../middlewares/isAuth.middleware';
+import { uploadMiddleware } from '../middlewares/fileUploadMiddleware';
 
 const postRoutes = Router();
 
-postRoutes.post('/', isAuth, fileUploadMiddleware, validate(createPostSchema), createPostHandler);
-
-postRoutes.get('/', isAuth, allPostsHandler);
+postRoutes.route('/').post(isAuth, uploadMiddleware('photo'), validate(createPostSchema), createPostHandler).get(isAuth, allPostsHandler);
 
 postRoutes
   .route('/:postId')
   .get(isAuth, onePostHandler)
-  .put(validate(updatePostSchema), isAuth, updatePostHandler)
+  .put(uploadMiddleware('photo'), validate(updatePostSchema), isAuth, updatePostHandler)
   .delete(isAuth, restrictTo('ADMIN', 'USER'), deletePostHandler);
 
 postRoutes.put('/likes/:postId', isAuth, toggleLikesHandler);

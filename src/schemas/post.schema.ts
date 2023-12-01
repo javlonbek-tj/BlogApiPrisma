@@ -4,16 +4,18 @@ export const createPostSchema = z.object({
   body: z.object({
     title: z
       .string({
-        required_error: 'title is required',
-        invalid_type_error: 'title must be a string',
+        required_error: 'Title is required',
+        invalid_type_error: 'Title must be a string',
       })
-      .trim(),
+      .trim()
+      .min(1, { message: "Title can't be empty" }),
     description: z
       .string({
-        required_error: 'description is required',
-        invalid_type_error: 'description must be a string',
+        required_error: 'Description is required',
+        invalid_type_error: 'Description must be a string',
       })
-      .trim(),
+      .trim()
+      .min(1, { message: "Description can't be empty" }),
     categories: z.array(z.string()),
   }),
 });
@@ -29,21 +31,23 @@ export const getPostSchema = z.object({
 });
 
 export const updatePostSchema = z.object({
-  ...params,
   body: z.object({
     title: z
       .string({
         invalid_type_error: 'title must be a string',
       })
       .trim()
+      .min(1, { message: "Title can't be empty" })
       .optional(),
     description: z
       .string({
         invalid_type_error: 'description must be a string',
       })
       .trim()
+      .min(1, { message: "Description can't be empty" })
       .optional(),
     categories: z.array(z.string()).optional(),
+    photo: z.string().optional(),
   }),
 });
 

@@ -1,6 +1,7 @@
 import { CreatePostInput, UpdatePostInput } from '../schemas/post.schema';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
+import { deleteFile } from '../utils/deleteFile';
 import { getLikesDislikesInclude, getPostInclude, getUserSelectFields } from '../utils/getSelectedField';
 
 const create = async (authorId: string, photo: string, { title, description, categories }: CreatePostInput) => {
@@ -89,7 +90,6 @@ const onePost = async (postId: string, userId: string) => {
 };
 
 const updatePost = async (postId: string, userId: string, input: UpdatePostInput) => {
-  // UPDATE PHOTO AS WELL!!
   const post = await db.post.findUnique({ where: { id: postId } });
   if (!post) {
     throw ApiError.BadRequest('Post not Found');
@@ -108,9 +108,10 @@ const updatePost = async (postId: string, userId: string, input: UpdatePostInput
     dataToUpdate.description = input.description;
   }
 
-  /*  if (input.photo !== undefined) {
+  if (input.photo !== undefined) {
     dataToUpdate.photo = input.photo;
-  } */
+    deleteFile(post.photo);
+  }
 
   if (input.categories !== undefined) {
     dataToUpdate.categories = input.categories;

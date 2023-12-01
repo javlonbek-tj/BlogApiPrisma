@@ -5,7 +5,7 @@ import config from 'config';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
 import { getUserSelectFields } from '../utils/getSelectedField';
-import { resetPasswordInput, updatePasswordInput, updateUserInput } from '../schemas/user.schema';
+import { ResetPasswordInput, UpdatePasswordInput, UpdateUserInput } from '../schemas/user.schema';
 import * as tokenService from './token.service';
 import { sendMail } from './mail.service';
 
@@ -202,14 +202,14 @@ const adminUnBlockUser = async (userId: string) => {
   });
 };
 
-const updateUserInfo = async (userId: string, input: updateUserInput) => {
+const updateUserInfo = async (userId: string, input: UpdateUserInput) => {
   if (input.email) {
     const isEmailTaken = await db.user.findUnique({ where: { email: input.email } });
     if (isEmailTaken) {
       throw ApiError.BadRequest(`${input.email} is already taken`);
     }
   }
-  const dataToUpdate: updateUserInput = {};
+  const dataToUpdate: UpdateUserInput = {};
 
   if (input.firstname !== undefined) {
     dataToUpdate.firstname = input.firstname;
@@ -233,7 +233,7 @@ const updateUserInfo = async (userId: string, input: updateUserInput) => {
   });
 };
 
-const changeUserPassword = async (userId: string, { oldPass, newPass, newPassConfirm }: updatePasswordInput) => {
+const changeUserPassword = async (userId: string, { oldPass, newPass, newPassConfirm }: UpdatePasswordInput) => {
   const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {
     throw ApiError.BadRequest('User not Found');
@@ -283,7 +283,7 @@ const forgotPassword = async (email: string) => {
   } */
 };
 
-const resetPassword = async (resetToken: string, { password }: resetPasswordInput) => {
+const resetPassword = async (resetToken: string, { password }: ResetPasswordInput) => {
   const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
   const user = await db.user.findFirst({
     where: {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import { AnyZodObject, ZodError } from 'zod';
 import ApiError from '../utils/appError';
+import { deleteFile } from '../utils/deleteFile';
 
 export const validate = (schema: AnyZodObject) => async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,12 +15,7 @@ export const validate = (schema: AnyZodObject) => async (req: Request, res: Resp
     if (e instanceof ZodError) {
       next(ApiError.BadRequest('Validation Error', e.errors));
       if (req.file) {
-        const filePath = req.file.path;
-        fs.unlink(filePath, err => {
-          if (err) {
-            throw new Error('Error while deleting file');
-          }
-        });
+        deleteFile(req.file.path);
       }
     } else {
       next(e);

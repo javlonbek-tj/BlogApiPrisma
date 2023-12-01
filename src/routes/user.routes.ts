@@ -17,26 +17,27 @@ import {
 } from '../controllers/user.controller';
 import { isAuth, restrictTo } from '../middlewares/isAuth.middleware';
 import { validate } from '../middlewares/validate';
+import { uploadMiddleware } from '../middlewares/fileUploadMiddleware';
 
 const userRoutes = Router();
 
 userRoutes.get('/:userId', isAuth, oneUserHandler);
 
-userRoutes.get('/profile-viewers/:id', isAuth, visitUserProfileHandler);
+userRoutes.get('/profile-viewers/:userId', isAuth, visitUserProfileHandler);
 
-userRoutes.get('/following/:id', isAuth, followerUserHandler);
+userRoutes.get('/following/:userId', isAuth, followerUserHandler);
 
-userRoutes.get('/unfollowing/:id', isAuth, unFollowerUserHandler);
+userRoutes.get('/unfollowing/:userId', isAuth, unFollowerUserHandler);
 
-userRoutes.get('/blocking/:id', isAuth, blockUserHandler);
+userRoutes.get('/blocking/:userId', isAuth, blockUserHandler);
 
-userRoutes.get('/unblocking/:id', isAuth, unBlockUserHandler);
+userRoutes.get('/unblocking/:userId', isAuth, unBlockUserHandler);
 
-userRoutes.put('/admin-block/:id', isAuth, restrictTo('ADMIN'), adminBlockUserHandler);
+userRoutes.put('/admin-block/:userId', isAuth, restrictTo('ADMIN'), adminBlockUserHandler);
 
-userRoutes.put('/admin-unblock/:id', isAuth, restrictTo('ADMIN'), adminUnBlockUserHandler);
+userRoutes.put('/admin-unblock/:userId', isAuth, restrictTo('ADMIN'), adminUnBlockUserHandler);
 
-userRoutes.put('/', isAuth, validate(updateUserSchema), updateUserInfoHandler);
+userRoutes.put('/', isAuth, uploadMiddleware('profilePhoto'), validate(updateUserSchema), updateUserInfoHandler);
 
 userRoutes.put('/change-password', isAuth, validate(updatePasswordSchema), changeUserPasswordHandler);
 

@@ -7,7 +7,8 @@ export const createCommentSchema = z.object({
         required_error: 'Description is required',
         invalid_type_error: 'Description must be a string',
       })
-      .trim(),
+      .trim()
+      .min(1, { message: "Description can't be empty" }),
     postId: z.string(),
   }),
 });
@@ -23,13 +24,13 @@ export const getCommentSchema = z.object({
 });
 
 export const updateCommentSchema = z.object({
-  ...params,
   body: z.object({
     description: z
       .string({
         invalid_type_error: 'Description must be a string',
       })
       .trim()
+      .min(1, { message: "Description can't be empty" })
       .optional(),
   }),
 });
