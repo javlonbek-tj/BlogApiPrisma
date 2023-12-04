@@ -28,6 +28,7 @@ model User {
   passwordChangedAt    DateTime?
   passwordResetToken   String?
   passwordResetExpires Int?
+  lastPostDate         DateTime?
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt
   token                Token?

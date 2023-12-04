@@ -20,6 +20,12 @@ const create = async (authorId: string, photo: string, { title, description, cat
       },
     },
   });
+  await db.user.update({
+    where: { id: authorId },
+    data: {
+      lastPostDate: new Date(),
+    },
+  });
   return post;
 };
 

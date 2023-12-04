@@ -14,6 +14,7 @@ type UserSelect = {
   posts?: { select: { id: boolean } } | boolean;
   comments?: { select: { id: boolean } } | boolean;
   blockings?: { select: { id: boolean } } | boolean;
+  lastPostDate?: boolean;
   password?: boolean;
   createdAt: boolean;
   updatedAt: boolean;
@@ -36,6 +37,7 @@ export const getUserSelectFields = (includePassword = false): UserSelect => ({
   comments: { select: { id: true } },
   blockings: { select: { id: true } },
   password: includePassword,
+  lastPostDate: true,
   createdAt: true,
   updatedAt: true,
 });

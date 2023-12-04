@@ -13,7 +13,7 @@ import {
   unBlockUserHandler,
   unFollowerUserHandler,
   updateUserInfoHandler,
-  visitUserProfileHandler,
+  profileViewersHandler,
 } from '../controllers/user.controller';
 import { isAuth, restrictTo } from '../middlewares/isAuth.middleware';
 import { validate } from '../middlewares/validate';
@@ -21,9 +21,9 @@ import { uploadMiddleware } from '../middlewares/fileUploadMiddleware';
 
 const userRoutes = Router();
 
-userRoutes.get('/:userId', isAuth, oneUserHandler);
+userRoutes.get('/profile-viewers', isAuth, profileViewersHandler);
 
-userRoutes.get('/profile-viewers/:userId', isAuth, visitUserProfileHandler);
+userRoutes.get('/:userId', isAuth, oneUserHandler);
 
 userRoutes.get('/following/:userId', isAuth, followerUserHandler);
 

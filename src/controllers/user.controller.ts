@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import * as userService from '../services/user.service';
 import { GetUserInput, UpdateUserInput } from '../schemas/user.schema';
 
-export const visitUserProfileHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const profileViewersHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userToBeViewed = await userService.visitUserProfile(req.params.id, req.userId);
+    const user = await userService.profileViewers(req.userId);
     res.status(200).json({
       status: 'success',
-      data: userToBeViewed,
+      data: user,
     });
   } catch (e) {
     next(e);
@@ -16,10 +16,10 @@ export const visitUserProfileHandler = async (req: Request, res: Response, next:
 
 export const oneUserHandler = async (req: Request<GetUserInput>, res: Response, next: NextFunction) => {
   try {
-    const user = await userService.findOne(req.params.userId);
+    const userToBeViewed = await userService.findOne(req.params.userId, req.userId);
     res.status(200).json({
       status: 'success',
-      data: user,
+      data: userToBeViewed,
     });
   } catch (e) {
     next(e);

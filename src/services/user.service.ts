@@ -1,10 +1,10 @@
+import { getUserSelectFields } from './../utils/getSelectedField';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import 'dotenv/config';
 import config from 'config';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
-import { getUserSelectFields } from '../utils/getSelectedField';
 import { ResetPasswordInput, UpdatePasswordInput, UpdateUserInput } from '../schemas/user.schema';
 import * as tokenService from './token.service';
 import { sendMail } from './mail.service';
@@ -31,20 +31,36 @@ const createPasswordResetToken = async (email: string) => {
   return resetToken;
 };
 
-const findOne = async (userId: string) => {
-  const user = await db.user.findUnique({ where: { id: userId }, select: getUserSelectFields() });
-  if (!user) {
-    throw ApiError.BadRequest('User not Found');
-  }
-  return user;
-};
-
-const visitUserProfile = async (userId: string, viewerId: string) => {
+const findOne = async (userId: string, viewerId: string) => {
   const userToBeViewed = await db.user.findUnique({
     where: { id: userId },
     select: getUserSelectFields(),
   });
   if (userToBeViewed && viewerId) {
+    if (userToBeViewed.posts.length <= 0) {
+      await db.user.update({
+        where: { id: userId },
+        data: {
+          userAward: 'BRONZE',
+        },
+      });
+    }
+    if (userToBeViewed.posts.length > 10) {
+      await db.user.update({
+        where: { id: userId },
+        data: {
+          userAward: 'SILVER',
+        },
+      });
+    }
+    if (userToBeViewed.posts.length > 20) {
+      await db.user.update({
+        where: { id: userId },
+        data: {
+          userAward: 'GOLD',
+        },
+      });
+    }
     const isUserAlreadyViewed = userToBeViewed.viewers.find(viewer => viewer.id === viewerId);
     if (isUserAlreadyViewed) {
       return userToBeViewed;
@@ -61,6 +77,21 @@ const visitUserProfile = async (userId: string, viewerId: string) => {
     return updatedUser;
   }
   throw ApiError.BadRequest('User not found');
+};
+
+const profileViewers = async (userId: string) => {
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: {
+      viewers: {
+        select: getUserSelectFields(),
+      },
+    },
+  });
+  if (!user) {
+    throw ApiError.BadRequest('User not found');
+  }
+  return user;
 };
 
 const followUser = async (followedUserId: string, followingUserId: string) => {
@@ -250,6 +281,7 @@ const changeUserPassword = async (userId: string, { oldPass, newPass, newPassCon
     where: { id: userId },
     data: {
       password: hashPassword,
+      passwordChangedAt: new Date(),
     },
     select: getUserSelectFields(),
   });
@@ -319,7 +351,7 @@ const deleteAccount = async (userId: string) => {
 
 export {
   findOne,
-  visitUserProfile,
+  profileViewers,
   changedPasswordAfter,
   followUser,
   unFollowUser,
