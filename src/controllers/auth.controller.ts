@@ -24,7 +24,20 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     await authService.signup(req.body);
     return res.status(201).json({
       status: 'success',
-      message: 'Enter the code sent to your email!',
+      message: 'Code has been sent to your email!',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const reSendCode = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    await authService.reSendActivationCode(email);
+    return res.status(200).json({
+      status: 'success',
+      message: 'Code has been resent to your email!',
     });
   } catch (e) {
     next(e);
@@ -33,9 +46,12 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 export const activateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { refreshToken } = await authService.activate(req.body.activationCode);
-    res.cookie('jwt', refreshToken, cookieOptions());
-    return res.redirect(config.get<string>('clientUrl'));
+    const tokens = await authService.activate(req.body.activationCode);
+    res.cookie('jwt', tokens.refreshToken, cookieOptions());
+    return res.status(201).json({
+      status: 'success',
+      data: tokens,
+    });
   } catch (e) {
     next(e);
   }
@@ -44,6 +60,9 @@ export const activateUser = async (req: Request, res: Response, next: NextFuncti
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userData = await authService.signin(req.body);
+    if (!userData.user.isActivated) {
+      return reSendCode(req, res, next);
+    }
     res.cookie('jwt', userData.refreshToken, cookieOptions());
     return res.status(200).json({
       status: 'success',

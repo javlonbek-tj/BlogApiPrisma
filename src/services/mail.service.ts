@@ -18,3 +18,12 @@ export const sendMail = (to: string, subject: string, html: string) => {
     html,
   });
 };
+
+export const sendActivationCode = (email: string, randomSixDigitNumber: number) => {
+  const subject = 'Your activation code';
+  const html = `<div>
+            <h3>Here is your activation code. Do not give it to anyone</h3>
+             <h1>${randomSixDigitNumber}</h1> 
+            </div>`;
+  sendMail(email, subject, html);
+};

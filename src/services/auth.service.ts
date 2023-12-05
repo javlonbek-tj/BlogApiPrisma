@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { CreateUserInput, LoginUserInput } from '../schemas/user.schema';
 import ApiError from '../utils/appError';
 import db from '../utils/db';
-import { sendMail } from './mail.service';
+import { sendActivationCode, sendMail } from './mail.service';
 import * as tokenService from './token.service';
 import { getUserSelectFields } from '../utils/getSelectedField';
 
@@ -18,34 +18,58 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
   const hashedPassword = await bcrypt.hash(password, 10);
   const randomSixDigitNumber = Math.floor(Math.random() * 900000) + 100000;
   const numberAsString = randomSixDigitNumber.toString();
-  const hashedActivationCode = crypto.createHash('sha256').update(numberAsString).digest('hex');
-  const activationCodeExpires: number = Date.now() + 10 * 60 * 1000;
+  const hashedActivationCode = await bcrypt.hash(numberAsString, 10);
+  const activationCodeExpires: number = Date.now() + 1 * 60 * 1000;
   await db.user.create({
     data: {
       firstname,
       lastname,
       email,
       activationCode: hashedActivationCode,
-      activationCodeExpires,
+      activationCodeExpires: 4646876464313,
       password: hashedPassword,
       role,
     },
   });
   try {
-    const subject = 'Your activation code';
-    const html = `<div>
-            <h3>Here is your activation code. Do not give it to anyone</h3>
-             <h1>randomSixDigitNumber</h1> 
-            </div>`;
-    sendMail(email, subject, html);
+    sendActivationCode(email, randomSixDigitNumber);
   } catch (e) {
     await db.user.delete({ where: { email } });
     throw new ApiError(500, 'There was an error sending the email. Try again later!');
   }
 };
 
+const reSendActivationCode = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    throw ApiError.BadRequest('User not found');
+  }
+
+  const randomSixDigitNumber = Math.floor(Math.random() * 900000) + 100000;
+  const numberAsString = randomSixDigitNumber.toString();
+  const hashedActivationCode = await bcrypt.hash(numberAsString, 10);
+  const activationCodeExpires: number = Date.now() + 1 * 60 * 1000;
+
+  await db.user.update({
+    where: { id: user.id },
+    data: {
+      activationCode: hashedActivationCode,
+      activationCodeExpires,
+    },
+  });
+
+  try {
+    sendActivationCode(email, randomSixDigitNumber);
+  } catch (e) {
+    throw new ApiError(500, 'There was an error sending the email. Try again later!');
+  }
+};
+
 const activate = async (activationCode: string) => {
-  const hashedActivationCode = crypto.createHash('sha256').update(activationCode).digest('hex');
+  const hashedActivationCode = await bcrypt.hash(activationCode, 10);
   const user = await db.user.findFirst({
     where: {
       activationCode: hashedActivationCode,
@@ -90,4 +114,4 @@ const signout = (refreshToken: string) => {
   return tokenService.removeToken(refreshToken);
 };
 
-export { signup, activate, signin, signout };
+export { signup, reSendActivationCode, activate, signin, signout };
