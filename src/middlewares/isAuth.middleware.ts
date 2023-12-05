@@ -28,6 +28,9 @@ export const isAuth = async (req: Request, res: Response, next: NextFunction) =>
     if (!currentUser) {
       return next(ApiError.UnauthenticatedError());
     }
+    if (!currentUser.isActivated) {
+      return next(ApiError.UnauthenticatedError());
+    }
     if (changedPasswordAfter(userData.iat, currentUser.passwordChangedAt)) {
       return next(new ApiError(401, 'User recently changed password. Please login again'));
     }

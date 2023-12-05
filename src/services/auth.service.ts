@@ -29,7 +29,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
     },
     select: getUserSelectFields(),
   });
-  /* try {
+  try {
     const subject = 'Your activation Link';
     const link = `${config.get<string>('apiUrl')}/users/activate/${activationLink}`;
     const html = `<div>
@@ -40,7 +40,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
   } catch (e) {
     await db.user.delete({ where: { email } });
     throw new ApiError(500, 'There was an error sending the email. Try again later!');
-  } */
+  }
   const tokens = tokenService.generateTokens({ id: user.id, email: user.email });
   await tokenService.saveToken(user.id, tokens.refreshToken);
   return { ...tokens, user };
