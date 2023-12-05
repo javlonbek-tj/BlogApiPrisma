@@ -21,20 +21,20 @@ const cookieOptions = () => {
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userData = await authService.signup(req.body);
-    res.cookie('jwt', userData.refreshToken, cookieOptions());
+    await authService.signup(req.body);
     return res.status(201).json({
       status: 'success',
-      userData,
+      message: 'Enter the code sent to your email!',
     });
   } catch (e) {
     next(e);
   }
 };
 
-export const activateUser = (req: Request, res: Response, next: NextFunction) => {
+export const activateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    authService.activate(req.params.activationLink);
+    const { refreshToken } = await authService.activate(req.body.activationCode);
+    res.cookie('jwt', refreshToken, cookieOptions());
     return res.redirect(config.get<string>('clientUrl'));
   } catch (e) {
     next(e);

@@ -8,7 +8,7 @@ const authRoutes = Router();
 
 authRoutes.post('/signup', validate(createUserSchema), register);
 authRoutes.post('/login', validate(loginUserSchema), login);
-authRoutes.get('/activate/:activationLink', activateUser);
+authRoutes.patch('/activate', activateUser);
 authRoutes.post('/logout', isAuth, logout);
 
 export default authRoutes;

@@ -8,44 +8,45 @@ datasource db {
 }
 
 model User {
-  id                   String        @id @default(uuid())
-  firstname            String
-  lastname             String
-  profilPhoto          String?
-  email                String        @unique
-  password             String
-  isBlocked            Boolean       @default(false)
-  role                 RoleEnumType  @default(USER)
-  viewers              User[]        @relation("ViewerToUser")
-  followers            User[]        @relation("UserFollowers")
-  followings           User[]        @relation("UserFollowings")
-  posts                Post[]
-  comments             Comment[]
-  blockings            User[]        @relation("UserBlockings")
-  userAward            AwardEnumType @default(BRONZE)
-  isActivated          Boolean       @default(false)
-  activationLink       String
-  passwordChangedAt    DateTime?
-  passwordResetToken   String?
-  passwordResetExpires Int?
-  lastPostDate         DateTime?
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  token                Token?
-  postViewer           Post?         @relation("PostViews", fields: [postViewerId], references: [id])
-  postViewerId         String?
-  postLike             Post?         @relation("PostLikes", fields: [postLikeId], references: [id])
-  postLikeId           String?
-  postDislike          Post?         @relation("PostDislikes", fields: [postDislikeId], references: [id])
-  postDislikeId        String?
-  viewer               User?         @relation("ViewerToUser", fields: [viewerId], references: [id])
-  viewerId             String?
-  follower             User?         @relation("UserFollowers", fields: [followerId], references: [id])
-  followerId           String?
-  following            User?         @relation("UserFollowings", fields: [followingId], references: [id])
-  followingId          String?
-  blocking             User?         @relation("UserBlockings", fields: [blockingId], references: [id])
-  blockingId           String?
+  id                    String        @id @default(uuid())
+  firstname             String
+  lastname              String
+  profilPhoto           String?
+  email                 String        @unique
+  password              String
+  isBlocked             Boolean       @default(false)
+  role                  RoleEnumType  @default(USER)
+  viewers               User[]        @relation("ViewerToUser")
+  followers             User[]        @relation("UserFollowers")
+  followings            User[]        @relation("UserFollowings")
+  posts                 Post[]
+  comments              Comment[]
+  blockings             User[]        @relation("UserBlockings")
+  userAward             AwardEnumType @default(BRONZE)
+  isActivated           Boolean       @default(false)
+  activationCode        String
+  activationCodeExpires Int
+  passwordChangedAt     DateTime?
+  passwordResetToken    String?
+  passwordResetExpires  Int?
+  lastPostDate          DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  token                 Token?
+  postViewer            Post?         @relation("PostViews", fields: [postViewerId], references: [id])
+  postViewerId          String?
+  postLike              Post?         @relation("PostLikes", fields: [postLikeId], references: [id])
+  postLikeId            String?
+  postDislike           Post?         @relation("PostDislikes", fields: [postDislikeId], references: [id])
+  postDislikeId         String?
+  viewer                User?         @relation("ViewerToUser", fields: [viewerId], references: [id])
+  viewerId              String?
+  follower              User?         @relation("UserFollowers", fields: [followerId], references: [id])
+  followerId            String?
+  following             User?         @relation("UserFollowings", fields: [followingId], references: [id])
+  followingId           String?
+  blocking              User?         @relation("UserBlockings", fields: [blockingId], references: [id])
+  blockingId            String?
 }
 
 model Post {
