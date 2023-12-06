@@ -18,7 +18,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
   const hashedPassword = await bcrypt.hash(password, 10);
   const randomSixDigitNumber = Math.floor(Math.random() * 900000) + 100000;
   const numberAsString = randomSixDigitNumber.toString();
-  const hashedActivationCode = await bcrypt.hash(numberAsString, 10);
+  const hashedActivationCode = crypto.createHash('sha256').update(numberAsString).digest('hex');
   const activationCodeExpires: number = Date.now() + 1 * 60 * 1000;
   await db.user.create({
     data: {
@@ -26,7 +26,7 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
       lastname,
       email,
       activationCode: hashedActivationCode,
-      activationCodeExpires: 4646876464313,
+      activationCodeExpires,
       password: hashedPassword,
       role,
     },
@@ -40,21 +40,13 @@ const signup = async ({ firstname, lastname, email, password, role }: CreateUser
 };
 
 const reSendActivationCode = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: { email },
-  });
-
-  if (!user) {
-    throw ApiError.BadRequest('User not found');
-  }
-
   const randomSixDigitNumber = Math.floor(Math.random() * 900000) + 100000;
   const numberAsString = randomSixDigitNumber.toString();
-  const hashedActivationCode = await bcrypt.hash(numberAsString, 10);
+  const hashedActivationCode = crypto.createHash('sha256').update(numberAsString).digest('hex');
   const activationCodeExpires: number = Date.now() + 1 * 60 * 1000;
 
   await db.user.update({
-    where: { id: user.id },
+    where: { email },
     data: {
       activationCode: hashedActivationCode,
       activationCodeExpires,
@@ -69,7 +61,7 @@ const reSendActivationCode = async (email: string) => {
 };
 
 const activate = async (activationCode: string) => {
-  const hashedActivationCode = await bcrypt.hash(activationCode, 10);
+  const hashedActivationCode = crypto.createHash('sha256').update(activationCode).digest('hex');
   const user = await db.user.findFirst({
     where: {
       activationCode: hashedActivationCode,
@@ -110,8 +102,38 @@ const signin = async (input: LoginUserInput) => {
   return { ...tokens, user };
 };
 
+const refresh = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw ApiError.UnauthenticatedError();
+  }
+  const userData = tokenService.validateRefreshToken(refreshToken);
+  const tokenFromDb = await tokenService.findToken(refreshToken);
+  if (!userData || !tokenFromDb) {
+    throw ApiError.UnauthorizedError();
+  }
+  const tokens = tokenService.generateTokens({ id: userData.id, email: userData.email });
+  await tokenService.saveToken(userData.id, tokens.refreshToken);
+  return tokens;
+};
+
 const signout = (refreshToken: string) => {
   return tokenService.removeToken(refreshToken);
 };
 
-export { signup, reSendActivationCode, activate, signin, signout };
+const cookieOptions = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieOptions: {
+    maxAge: number;
+    httpOnly: boolean;
+    secure?: boolean;
+  } = {
+    maxAge: 15 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  };
+  if (isProduction) {
+    cookieOptions.secure = true;
+  }
+  return cookieOptions;
+};
+
+export { signup, reSendActivationCode, activate, signin, refresh, signout, cookieOptions };

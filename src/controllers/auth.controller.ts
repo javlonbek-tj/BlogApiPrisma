@@ -1,23 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import 'dotenv/config';
-import config from 'config';
 import * as authService from '../services/auth.service';
-
-const cookieOptions = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const cookieOptions: {
-    maxAge: number;
-    httpOnly: boolean;
-    secure?: boolean;
-  } = {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    httpOnly: true,
-  };
-  if (isProduction) {
-    cookieOptions.secure = true;
-  }
-  return cookieOptions;
-};
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -47,7 +30,7 @@ export const reSendCode = async (req: Request, res: Response, next: NextFunction
 export const activateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tokens = await authService.activate(req.body.activationCode);
-    res.cookie('jwt', tokens.refreshToken, cookieOptions());
+    res.cookie('jwt', tokens.refreshToken, authService.cookieOptions());
     return res.status(201).json({
       status: 'success',
       data: tokens,
@@ -61,12 +44,30 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const userData = await authService.signin(req.body);
     if (!userData.user.isActivated) {
-      return reSendCode(req, res, next);
+      await authService.reSendActivationCode(userData.user.email);
+      return res.status(200).json({
+        status: 'success',
+        message: 'Code has been resent to your email!',
+      });
     }
-    res.cookie('jwt', userData.refreshToken, cookieOptions());
+    res.cookie('jwt', userData.refreshToken, authService.cookieOptions());
     return res.status(200).json({
       status: 'success',
       userData,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const refresh = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { jwt } = req.cookies;
+    const tokens = await authService.refresh(jwt);
+    res.cookie('jwt', tokens.refreshToken, authService.cookieOptions());
+    return res.status(200).json({
+      status: 'success',
+      data: tokens,
     });
   } catch (e) {
     next(e);
